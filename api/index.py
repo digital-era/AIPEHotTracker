@@ -37,43 +37,77 @@ def get_latest_trade_date():
     # 如果 akshare 失败，回退到使用北京时间的当前日期
     return get_beijing_time_date_str()
 
+# 在 api/index.py 中
+
 def get_etf_data():
     """
-    从雪球获取ETF数据。
+    从雪球获取ETF数据，加强了Cookie获取流程。
     """
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-    }
-    # 创建一个 session 以复用 cookie
+    # 使用一个 Session 对象来自动管理和发送 Cookie
     session = requests.Session()
-    # 先访问一次首页以获取必要的 cookie
-    session.get("https://xueqiu.com", headers=headers)
 
-    # 获取涨幅榜
-    url_up = "https://stock.xueqiu.com/v5/stock/screener/fund/list.json?type=18&parent_type=1&order=desc&order_by=percent&page=1&size=1000"
-    res_up = session.get(url_up, headers=headers)
-    res_up.raise_for_status()
-    data_up = res_up.json()
+    # 1. 强化请求头，模拟更真实的浏览器
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
+        'Connection': 'keep-alive',
+    }
 
-    # 获取跌幅榜
-    url_down = "https://stock.xueqiu.com/v5/stock/screener/fund/list.json?type=18&parent_type=1&order=asc&order_by=percent&page=1&size=1000"
-    res_down = session.get(url_down, headers=headers)
-    res_down.raise_for_status()
-    data_down = res_down.json()
-    
-    session.close()
+    # 2. 关键步骤：先访问雪球首页，让 session 获取必要的 Cookie
+    # 这一步是模拟浏览器首次打开雪球网站的行为
+    # Vercel 的网络环境可能需要这个步骤才能建立信任
+    try:
+        home_url = "https://xueqiu.com"
+        # 使用 session 对象发送请求，它会自动存储返回的 cookies
+        session.get(home_url, headers=headers, timeout=10)
+    except requests.exceptions.RequestException as e:
+        # 如果连首页都访问不了，直接抛出错误
+        raise RuntimeError(f"Failed to access Xueqiu homepage to get cookies: {e}")
 
+    # 3. 更新请求头，用于后续的 API 请求 (API请求通常需要不同的 Accept 类型)
+    api_headers = headers.copy()
+    api_headers['Accept'] = 'application/json, text/plain, */*'
+    api_headers['Host'] = 'stock.xueqiu.com'
+    api_headers['Referer'] = 'https://xueqiu.com/hq'
+
+    # 4. 使用已经包含了 Cookie 的 session 对象来请求 API
+    try:
+        # 获取涨幅榜
+        url_up = "https://stock.xueqiu.com/v5/stock/screener/fund/list.json?type=18&parent_type=1&order=desc&order_by=percent&page=1&size=1000"
+        res_up = session.get(url_up, headers=api_headers, timeout=15)
+        res_up.raise_for_status() # 检查HTTP状态码，如果不是2xx则抛出异常
+        data_up = res_up.json()
+
+        # 获取跌幅榜
+        url_down = "https://stock.xueqiu.com/v5/stock/screener/fund/list.json?type=18&parent_type=1&order=asc&order_by=percent&page=1&size=1000"
+        res_down = session.get(url_down, headers=api_headers, timeout=15)
+        res_down.raise_for_status()
+        data_down = res_down.json()
+    except requests.exceptions.HTTPError as e:
+        # 特别捕获 HTTP 错误，可以提供更多上下文
+        # 比如打印出响应内容，看看雪球返回了什么错误信息
+        response_text = e.response.text if e.response else "No response body"
+        raise RuntimeError(f"HTTP Error from Xueqiu API: {e}. Response: {response_text}")
+    except requests.exceptions.RequestException as e:
+        raise RuntimeError(f"Network error when requesting Xueqiu API: {e}")
+
+    # ... 后续的数据处理部分保持不变 ...
     # 合并和去重
     seen_symbols = set()
     merged_list = []
-    for item in data_up["data"]["list"] + data_down["data"]["list"]:
-        if item['symbol'] not in seen_symbols:
-            seen_symbols.add(item['symbol'])
-            merged_list.append(item)
+    if "data" in data_up and "list" in data_up["data"]:
+        merged_list.extend(data_up["data"]["list"])
+        seen_symbols.update(item['symbol'] for item in data_up["data"]["list"])
+
+    if "data" in data_down and "list" in data_down["data"]:
+        for item in data_down["data"]["list"]:
+            if item['symbol'] not in seen_symbols:
+                merged_list.append(item)
     
     # 解析数据到 DataFrame
     etf_list = []
-    strdate = get_latest_trade_date()
+    strdate = get_latest_trade_date() # 确保 get_latest_trade_date 函数存在且能工作
     
     for item in merged_list:
         etf_info = {
