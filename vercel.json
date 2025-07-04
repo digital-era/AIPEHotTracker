@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.py": {
+      "runtime": "vercel-python@3.3.0",
+      "maxDuration": 30
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/index",
+      "schedule": "30 1-6 * * 1-5"
+    },
+    {
+      "path": "/api/index",
+      "schedule": "0 2-7 * * 1-5"
+    }
+  ]
+}
