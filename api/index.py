@@ -1,5 +1,5 @@
 # api/index.py
-# 修正了 10-days watchlist 的处理逻辑：不排序，直接返回扁平列表。
+# 性能优化版：一次获取，多次使用，避免重复的网络请求。
 
 import os
 import json
@@ -7,7 +7,7 @@ import pandas as pd
 import akshare as ak
 from datetime import datetime, timezone, timedelta
 
-# --- 辅助函数：read_watchlist_from_json (保持不变) ---
+# --- 辅助函数 (保持不变) ---
 def read_watchlist_from_json(file_path):
     # ... (此函数代码不变) ...
     print(f"Reading watchlist from: {file_path}")
@@ -20,29 +20,23 @@ def read_watchlist_from_json(file_path):
     except Exception as e:
         print(f"Error reading watchlist file {file_path}: {e}"); return []
 
-# --- 核心处理函数 (get_etf_report, get_stock_report, get_hk_stock_report) ---
-# ... (这三个函数的代码完全不变，为简洁省略) ...
-def get_etf_report_from_akshare():
+# --- 处理函数 (已修改：不再自己获取数据，而是接收DataFrame作为参数) ---
+
+def process_etf_report(df_raw, trade_date):
+    """处理传入的ETF DataFrame并生成报告。"""
     print("--- (1/5) Processing ETF Data ---")
-    df_raw = ak.fund_etf_spot_em()
-    if df_raw.empty: raise RuntimeError("Empty ETF DataFrame.")
-    try:
-        ts = pd.to_datetime(df_raw['数据日期'].iloc[0]); trade_date = ts.strftime('%Y-%m-%d')
-    except:
-        trade_date = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d')
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']
     df = df_raw[required_columns].copy(); df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
     for col in ['Price', 'Percent', 'Amount']: df[col] = pd.to_numeric(df[col], errors='coerce')
     df.dropna(inplace=True); df['Amount'] = (df['Amount'] / 100_000_000).round(2); df['Price'] = df['Price'].round(3); df['Percent'] = df['Percent'].round(2)
-    if df.empty: return {"error": "No valid data."}, trade_date
+    if df.empty: return {"error": "No valid data."}
     df_top_up = df.sort_values(by='Percent', ascending=False).head(20); df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
-    return report, trade_date
+    return report
 
-def get_stock_report_from_akshare(trade_date):
+def process_stock_report(df_raw, trade_date):
+    """处理传入的全市场A股DataFrame并生成报告。"""
     print("\n--- (2/5) Processing All A-Share Stock Data ---")
-    df_raw = ak.stock_zh_a_spot_em()
-    if df_raw.empty: raise RuntimeError("Empty Stock DataFrame.")
     df_filtered = df_raw[~df_raw['代码'].str.startswith(('4', '8')) & ~df_raw['名称'].str.contains('ST|退')].copy()
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额', '市盈率-动态', '市净率', '总市值']
     df = df_filtered[required_columns].copy(); df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount', '市盈率-动态': 'PE_TTM', '市净率': 'PB', '总市值': 'TotalMarketCap'}, inplace=True)
@@ -53,10 +47,9 @@ def get_stock_report_from_akshare(trade_date):
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
     return report
 
-def get_hk_stock_report_from_akshare(trade_date):
+def process_hk_stock_report(df_raw, trade_date):
+    """处理传入的全市场港股DataFrame并生成报告。"""
     print("\n--- (3/5) Processing All Hong Kong Stock Data ---")
-    df_raw = ak.stock_hk_main_board_spot_em()
-    if df_raw.empty: raise RuntimeError("Empty HK Stock DataFrame.")
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']; df = df_raw[required_columns].copy()
     df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
     for col in ['Price', 'Percent', 'Amount']: df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -66,118 +59,101 @@ def get_hk_stock_report_from_akshare(trade_date):
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
     return report
 
-# --- 修改后的函数：处理 A 股“关注列表” ---
-def get_stock_watchlist_report(trade_date, watchlist_codes):
-    """
-    基于给定的股票代码名单，筛选A股实时行情并按原始顺序返回扁平列表。
-    """
+def process_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
+    """在传入的A股DataFrame上，基于watchlist筛选并生成报告。"""
     print("\n--- (4/5) Processing A-Share Watchlist Data ---")
-    if not watchlist_codes:
-        return {"error": "Watchlist is empty, skipping."}
-        
-    df_raw = ak.stock_zh_a_spot_em()
-    if df_raw.empty:
-        raise RuntimeError("akshare returned an empty DataFrame for stocks.")
-    
-    # 将实时行情数据设置为以'代码'为索引的字典，方便快速查找
+    if not watchlist_codes: return {"error": "Watchlist is empty, skipping."}
     df_raw['代码'] = df_raw['代码'].astype(str)
     live_data_map = df_raw.set_index('代码').to_dict('index')
-
-    # 按照 watchlist_codes 的顺序来构建结果
     result_list = []
     for code in watchlist_codes:
         if code in live_data_map:
             item = live_data_map[code]
             stock_info = {
-                '代码': code,
-                '名称': item.get('名称'),
-                'Price': round(pd.to_numeric(item.get('最新价'), errors='coerce'), 2),
+                '代码': code, '名称': item.get('名称'), 'Price': round(pd.to_numeric(item.get('最新价'), errors='coerce'), 2),
                 'Percent': round(pd.to_numeric(item.get('涨跌幅'), errors='coerce'), 2),
                 'Amount': round(pd.to_numeric(item.get('成交额'), errors='coerce') / 100_000_000, 2),
-                'PE_TTM': round(pd.to_numeric(item.get('市盈率-动态'), errors='coerce'), 2),
-                'PB': round(pd.to_numeric(item.get('市净率'), errors='coerce'), 2),
+                'PE_TTM': round(pd.to_numeric(item.get('市盈率-动态'), errors='coerce'), 2), 'PB': round(pd.to_numeric(item.get('市净率'), errors='coerce'), 2),
                 'TotalMarketCap': round(pd.to_numeric(item.get('总市值'), errors='coerce') / 100_000_000, 2),
+                "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date
             }
-            # 增加一个更新时间和交易日字段
-            stock_info["update_time_bjt"] = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
-            stock_info["trade_date"] = trade_date
             result_list.append(stock_info)
-        else:
-            print(f"  Warning: Code {code} from watchlist not found in live market data.")
-
     print(f"Processed {len(result_list)} stocks from the A-Share watchlist.")
-    # 直接返回处理后的列表
     return result_list
 
-# --- 修改后的函数：处理港股“关注列表” ---
-def get_hk_stock_watchlist_report(trade_date, watchlist_codes):
-    """
-    基于给定的股票代码名单，筛选港股实时行情并按原始顺序返回扁平列表。
-    """
+def process_hk_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
+    """在传入的港股DataFrame上，基于watchlist筛选并生成报告。"""
     print("\n--- (5/5) Processing Hong Kong Stock Watchlist Data ---")
-    if not watchlist_codes:
-        return {"error": "Watchlist is empty, skipping."}
-        
-    df_raw = ak.stock_hk_main_board_spot_em()
-    if df_raw.empty:
-        raise RuntimeError("akshare returned an empty DataFrame for HK stocks.")
-        
-    # 将实时行情数据设置为以'代码'为索引的字典
+    if not watchlist_codes: return {"error": "Watchlist is empty, skipping."}
     df_raw['代码'] = df_raw['代码'].astype(str)
     live_data_map = df_raw.set_index('代码').to_dict('index')
-    
-    # 按照 watchlist_codes 的顺序来构建结果
     result_list = []
     for code in watchlist_codes:
         if code in live_data_map:
             item = live_data_map[code]
             stock_info = {
-                '代码': code,
-                '名称': item.get('名称'),
-                'Price': round(pd.to_numeric(item.get('最新价'), errors='coerce'), 3),
+                '代码': code, '名称': item.get('名称'), 'Price': round(pd.to_numeric(item.get('最新价'), errors='coerce'), 3),
                 'Percent': round(pd.to_numeric(item.get('涨跌幅'), errors='coerce'), 2),
                 'Amount': round(pd.to_numeric(item.get('成交额'), errors='coerce') / 100_000_000, 2),
+                "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date
             }
-            stock_info["update_time_bjt"] = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
-            stock_info["trade_date"] = trade_date
             result_list.append(stock_info)
-        else:
-            print(f"  Warning: Code {code} from watchlist not found in live market data.")
-            
     print(f"Processed {len(result_list)} stocks from the HK Stock watchlist.")
-    # 直接返回处理后的列表
     return result_list
 
-# --- 脚本执行入口 (保持不变) ---
+# --- 脚本执行入口 (已重构，先获取所有数据，再分别处理) ---
 if __name__ == "__main__":
     output_dir = "data"
     os.makedirs(output_dir, exist_ok=True)
-    
-    base_trade_date = None
-    
+
     def run_and_save_task(name, func, file, *args):
-        # ... (此辅助函数代码不变) ...
         output_filepath = os.path.join(output_dir, file)
-        final_data = {}; print(f"\nWriting {name} data to {output_filepath}...")
+        final_data = {}
         try: final_data = func(*args)
-        except Exception as e: print(f"Error during {name}: {e}"); final_data = {"error": str(e)}
+        except Exception as e: print(f"\nError during {name}: {e}"); final_data = {"error": str(e)}
+        print(f"\nWriting {name} data to {output_filepath}...")
         with open(output_filepath, 'w', encoding='utf-8') as f: json.dump(final_data, f, ensure_ascii=False, indent=4)
         print(f"{name} data file generated successfully.")
 
-    etf_data, base_trade_date = {}, datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d')
+    # --- 阶段 1: 统一获取所有网络数据 ---
+    print("--- Starting Data Acquisition Phase ---")
+    base_trade_date = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d')
+    df_etf_raw, df_stock_raw, df_hk_stock_raw = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
+
     try:
-        etf_data, base_trade_date = get_etf_report_from_akshare()
+        df_etf_raw = ak.fund_etf_spot_em()
+        print(f"Successfully fetched {len(df_etf_raw)} ETFs.")
+        ts = pd.to_datetime(df_etf_raw['数据日期'].iloc[0])
+        base_trade_date = ts.strftime('%Y-%m-%d')
+        print(f"Base trade date set to: {base_trade_date}")
     except Exception as e:
-        print(f"Error during ETF processing: {e}"); etf_data = {"error": str(e)}
-    run_and_save_task("ETF", lambda: etf_data, "etf_data.json")
-    
-    run_and_save_task("A-Share Stock", get_stock_report_from_akshare, "stock_data.json", base_trade_date)
-    run_and_save_task("Hong Kong Stock", get_hk_stock_report_from_akshare, "hk_stock_data.json", base_trade_date)
-    
+        print(f"Could not fetch ETF data or extract date: {e}. Using fallback date.")
+
+    try:
+        df_stock_raw = ak.stock_zh_a_spot_em()
+        print(f"Successfully fetched {len(df_stock_raw)} A-share stocks.")
+    except Exception as e:
+        print(f"Could not fetch A-share stock data: {e}")
+
+    try:
+        df_hk_stock_raw = ak.stock_hk_main_board_spot_em()
+        print(f"Successfully fetched {len(df_hk_stock_raw)} HK stocks.")
+    except Exception as e:
+        print(f"Could not fetch HK stock data: {e}")
+
+    # --- 阶段 2: 读取本地 watchlist 文件 ---
     a_share_watchlist = read_watchlist_from_json(os.path.join(output_dir, "ARHot10days_top20.json"))
     hk_share_watchlist = read_watchlist_from_json(os.path.join(output_dir, "HKHot10days_top20.json"))
-    
-    run_and_save_task("A-Share Watchlist", get_stock_watchlist_report, "stock_10days_data.json", base_trade_date, a_share_watchlist)
-    run_and_save_task("HK Stock Watchlist", get_hk_stock_watchlist_report, "hk_stock_10days_data.json", base_trade_date, hk_share_watchlist)
+
+    # --- 阶段 3: 在内存中处理数据并保存结果 ---
+    print("\n--- Starting Data Processing Phase ---")
+    if not df_etf_raw.empty:
+        run_and_save_task("ETF", process_etf_report, "etf_data.json", df_etf_raw, base_trade_date)
+    if not df_stock_raw.empty:
+        run_and_save_task("A-Share Stock", process_stock_report, "stock_data.json", df_stock_raw, base_trade_date)
+        run_and_save_task("A-Share Watchlist", process_stock_watchlist_report, "stock_10days_data.json", df_stock_raw, base_trade_date, a_share_watchlist)
+    if not df_hk_stock_raw.empty:
+        run_and_save_task("Hong Kong Stock", process_hk_stock_report, "hk_stock_data.json", df_hk_stock_raw, base_trade_date)
+        run_and_save_task("HK Stock Watchlist", process_hk_stock_watchlist_report, "hk_stock_10days_data.json", df_hk_stock_raw, base_trade_date, hk_share_watchlist)
 
     print("\nAll tasks finished.")
