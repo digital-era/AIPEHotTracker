@@ -1,4 +1,4 @@
 {
-    "error": "HTTP Error from Xueqiu API: 400 Client Error:  for url: https://stock.xueqiu.com/v5/stock/screener/fund/list.json?type=18&parent_type=1&order=desc&order_by=percent&page=1&size=1000. Response: No response body",
-    "update_time_bjt": "2025-07-05 13:35:13"
+    "error": "400 Client Error:  for url: https://stock.xueqiu.com/v5/stock/screener/fund/list.json?type=18&parent_type=1&order=desc&order_by=percent&page=1&size=1000",
+    "update_time_bjt": "2025-07-05 13:44:48"
 }
