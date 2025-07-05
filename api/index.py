@@ -34,7 +34,11 @@ def get_etf_report_from_akshare():
     # akshare 返回的数据中，所有行的 '数据日期' 都是相同的，代表这份快照的日期。
     # 我们从第一行获取即可。
     try:
-        trade_date = df_raw['数据日期'].iloc[0]
+        #trade_date = df_raw['数据日期'].iloc[0]
+        # 1. 确保值被解析为日期时间对象
+        timestamp_obj = pd.to_datetime(df_raw['数据日期'].iloc[0])        
+        # 2. 使用 .strftime() 方法将其格式化为字符串
+        trade_date = timestamp_obj.strftime('%Y-%m-%d')
         print(f"Extracted trade date from data source: {trade_date}")
     except (KeyError, IndexError):
         # 如果 '数据日期' 列不存在或 DataFrame 为空，则使用当前日期作为备用
