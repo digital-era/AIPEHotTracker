@@ -1,116 +1,166 @@
 # api/index.py
+# 这个脚本现在可以同时处理 ETF 和 A股股票数据，
+# 并分别生成 etf_data.json 和 stock_data.json 两个文件。
 
 import os
 import json
 import pandas as pd
+import akshare as ak
 from datetime import datetime, timezone, timedelta
 
-# --- 1. 核心函数：使用 akshare 获取并处理数据 ---
-
+# --- 函数 1: 获取 ETF 数据报告 (保持不变) ---
 def get_etf_report_from_akshare():
     """
     使用 akshare.fund_etf_spot_em() 获取实时ETF数据，
-    并整理成包含涨跌幅 Top 20 的报告。
+    并整理成包含涨跌幅 Top 20 的报告字典。
     """
+    print("--- Processing ETF Data ---")
     print("Attempting to fetch ETF data using akshare.fund_etf_spot_em...")
     
-    try:
-        import akshare as ak
-    except ImportError:
-        raise RuntimeError("akshare library is not installed. Please add it to requirements.")
+    # 1. 获取数据
+    df_raw = ak.fund_etf_spot_em()
+    print(f"Successfully fetched {len(df_raw)} ETFs from akshare.")
 
-    # 1. 从 akshare 获取数据
-    try:
-        df_raw = ak.fund_etf_spot_em()
-        print(f"Successfully fetched {len(df_raw)} ETFs from akshare.")
-    except Exception as e:
-        raise RuntimeError(f"Failed to fetch data from akshare.fund_etf_spot_em(). Error: {e}")
-
-    # 检查返回的数据是否为空，如果为空则无法继续
     if df_raw.empty:
-        raise RuntimeError("akshare returned an empty DataFrame. Cannot proceed.")
+        raise RuntimeError("akshare returned an empty DataFrame for ETFs.")
 
-    # --- 关键修改：从数据源中提取交易日期 ---
-    # akshare 返回的数据中，所有行的 '数据日期' 都是相同的，代表这份快照的日期。
-    # 我们从第一行获取即可。
+    # 2. 提取并格式化交易日期
     try:
-        #trade_date = df_raw['数据日期'].iloc[0]
-        # 1. 确保值被解析为日期时间对象
-        timestamp_obj = pd.to_datetime(df_raw['数据日期'].iloc[0])        
-        # 2. 使用 .strftime() 方法将其格式化为字符串
+        timestamp_obj = pd.to_datetime(df_raw['数据日期'].iloc[0])
         trade_date = timestamp_obj.strftime('%Y-%m-%d')
-        print(f"Extracted trade date from data source: {trade_date}")
+        print(f"Extracted ETF trade date from data source: {trade_date}")
     except (KeyError, IndexError):
-        # 如果 '数据日期' 列不存在或 DataFrame 为空，则使用当前日期作为备用
-        print("Warning: '数据日期' column not found. Falling back to current Beijing time date.")
         trade_date = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d')
-    # ----------------------------------------
+        print(f"Warning: ETF '数据日期' not found. Falling back to current date: {trade_date}")
 
-    # 2. 数据清洗和重命名
+    # 3. 数据清洗、重命名和格式化
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']
-    df_selected = df_raw[required_columns].copy()
+    df = df_raw[required_columns].copy()
+    df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
+    df['Price'] = pd.to_numeric(df['Price'], errors='coerce')
+    df['Percent'] = pd.to_numeric(df['Percent'], errors='coerce')
+    df['Amount'] = pd.to_numeric(df['Amount'], errors='coerce')
+    df.dropna(inplace=True)
+    df['Amount'] = (df['Amount'] / 100_000_000).round(2)
+    df['Price'] = df['Price'].round(3)
+    df['Percent'] = df['Percent'].round(2)
 
-    df_selected.rename(columns={
-        '最新价': 'Price',
-        '涨跌幅': 'Percent',
-        '成交额': 'Amount'
-    }, inplace=True)
-
-    # 3. 数据类型转换和格式化
-    df_selected['Price'] = pd.to_numeric(df_selected['Price'], errors='coerce')
-    df_selected['Percent'] = pd.to_numeric(df_selected['Percent'], errors='coerce')
-    df_selected['Amount'] = pd.to_numeric(df_selected['Amount'], errors='coerce')
-    df_selected.dropna(inplace=True)
-
-    df_selected['Amount'] = (df_selected['Amount'] / 100_000_000).round(2)
-    df_selected['Price'] = df_selected['Price'].round(3)
-    df_selected['Percent'] = df_selected['Percent'].round(2)
+    if df.empty:
+        return {"error": "No valid ETF data after cleaning."}
 
     # 4. 生成 Top 20 榜单
-    if df_selected.empty:
-        print("No valid ETF data after cleaning. Exiting.")
-        return {"error": "No valid ETF data available from akshare after cleaning."}
+    df_top_up = df.sort_values(by='Percent', ascending=False).head(20)
+    df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
 
-    df_top_up = df_selected.sort_values(by='Percent', ascending=False).head(20)
-    print("\n--- Top 20 Gainers ---")
-    print(df_top_up.to_string(index=False))
-
-    df_top_down = df_selected.sort_values(by='Percent', ascending=True).head(20)
-    print("\n--- Top 20 Losers ---")
-    print(df_top_down.to_string(index=False))
-
-    # 5. 构建最终的报告字典
+    # 5. 构建报告字典
     report = {
         "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'),
-        # --- 关键修改：使用从数据中提取的 trade_date ---
         "trade_date": trade_date,
-        # ---------------------------------------------
         "top_up_20": df_top_up.to_dict('records'),
         "top_down_20": df_top_down.to_dict('records')
     }
-    
     return report
 
-# --- 2. 脚本执行入口 (保持不变) ---
+# --- 函数 2: 新增 - 获取股票数据报告 ---
+def get_stock_report_from_akshare():
+    """
+    使用 akshare.stock_zh_a_spot_em() 获取A股实时行情数据，
+    并整理成包含涨跌幅 Top 20 的报告字典。
+    """
+    print("\n--- Processing Stock Data ---")
+    print("Attempting to fetch A-share stock data using akshare.stock_zh_a_spot_em...")
 
+    # 1. 获取数据
+    df_raw = ak.stock_zh_a_spot_em()
+    print(f"Successfully fetched {len(df_raw)} stocks from akshare.")
+    
+    if df_raw.empty:
+        raise RuntimeError("akshare returned an empty DataFrame for stocks.")
+
+    # 2. 数据清洗和筛选
+    # 筛选掉北交所股票、ST/*ST股票和退市整理股票
+    df_filtered = df_raw[
+        ~df_raw['代码'].str.startswith(('4', '8')) &
+        ~df_raw['名称'].str.contains('ST|退')
+    ].copy()
+    print(f"Filtered down to {len(df_filtered)} stocks (removed BJSE, ST, and delisting).")
+
+    # 3. 数据处理
+    required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额', '市盈率-动态', '市净率', '总市值']
+    df = df_filtered[required_columns].copy()
+    df.rename(columns={
+        '最新价': 'Price',
+        '涨跌幅': 'Percent',
+        '成交额': 'Amount',
+        '市盈率-动态': 'PE_TTM',
+        '市净率': 'PB',
+        '总市值': 'TotalMarketCap'
+    }, inplace=True)
+
+    # 类型转换和格式化
+    for col in ['Price', 'Percent', 'Amount', 'PE_TTM', 'PB', 'TotalMarketCap']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df.dropna(inplace=True)
+
+    df['Amount'] = (df['Amount'] / 100_000_000).round(2)
+    df['TotalMarketCap'] = (df['TotalMarketCap'] / 100_000_000).round(2)
+    df['Price'] = df['Price'].round(2)
+    df['Percent'] = df['Percent'].round(2)
+
+    if df.empty:
+        return {"error": "No valid stock data after cleaning."}
+
+    # 4. 生成 Top 20 榜单
+    df_top_up = df.sort_values(by='Percent', ascending=False).head(20)
+    df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
+
+    # 5. 构建报告字典
+    report = {
+        "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'),
+        # A股行情接口不返回数据日期，直接使用当前北京日期
+        "trade_date": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d'),
+        "top_up_20": df_top_up.to_dict('records'),
+        "top_down_20": df_top_down.to_dict('records')
+    }
+    return report
+
+# --- 脚本执行入口 (已修改，分别处理两种数据) ---
 if __name__ == "__main__":
     output_dir = "data"
-    output_filepath = os.path.join(output_dir, "etf_data.json")
-
     os.makedirs(output_dir, exist_ok=True)
-    
-    final_data = {}
+
+    # --- 1. 处理 ETF 数据 ---
+    etf_output_filepath = os.path.join(output_dir, "etf_data.json")
+    etf_final_data = {}
     try:
-        final_data = get_etf_report_from_akshare()
+        etf_final_data = get_etf_report_from_akshare()
     except Exception as e:
-        print(f"\nAn critical error occurred during script execution: {e}")
-        final_data = {
+        print(f"\nAn critical error occurred during ETF data processing: {e}")
+        etf_final_data = {
+            "error": str(e),
+            "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
+        }
+    
+    print(f"\nWriting ETF data to {etf_output_filepath}...")
+    with open(etf_output_filepath, 'w', encoding='utf-8') as f:
+        json.dump(etf_final_data, f, ensure_ascii=False, indent=4)
+    print("ETF data file generated successfully.")
+
+    # --- 2. 处理股票数据 ---
+    stock_output_filepath = os.path.join(output_dir, "stock_data.json")
+    stock_final_data = {}
+    try:
+        stock_final_data = get_stock_report_from_akshare()
+    except Exception as e:
+        print(f"\nAn critical error occurred during Stock data processing: {e}")
+        stock_final_data = {
             "error": str(e),
             "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S')
         }
 
-    print(f"\nWriting data to {output_filepath}...")
-    with open(output_filepath, 'w', encoding='utf-8') as f:
-        json.dump(final_data, f, ensure_ascii=False, indent=4)
-        
-    print("Script finished successfully.")
+    print(f"\nWriting Stock data to {stock_output_filepath}...")
+    with open(stock_output_filepath, 'w', encoding='utf-8') as f:
+        json.dump(stock_final_data, f, ensure_ascii=False, indent=4)
+    print("Stock data file generated successfully.")
+
+    print("\nAll tasks finished.")
