@@ -22,6 +22,24 @@ def read_watchlist_from_json(file_path):
 
 # --- 处理函数 (已修改：不再自己获取数据，而是接收DataFrame作为参数) ---
 
+
+# --- 新增函数：处理 ETF 名称/代码 列表 ---
+def process_etf_name_list(df_raw):
+    """
+    从原始的 ETF DataFrame 中提取'代码'和'名称'列，
+    并重命名为 'code' 和 'name'。
+    """
+    print("\n--- (New Task) Processing ETF Name/Code List ---")
+    
+    # 筛选我们需要的两列
+    df_name_list = df_raw[['代码', '名称']].copy()
+    
+    # 将列名重命名为小写，以符合常见的 JSON key 命名习惯
+    df_name_list.rename(columns={'代码': 'code', '名称': 'name'}, inplace=True)
+    
+    # 直接将处理好的 DataFrame 转换为字典列表并返回
+    return df_name_list.to_dict('records')
+
 def process_etf_report(df_raw, trade_date):
     """处理传入的ETF DataFrame并生成报告。"""
     print("--- (1/5) Processing ETF Data ---")
@@ -149,6 +167,8 @@ if __name__ == "__main__":
     print("\n--- Starting Data Processing Phase ---")
     if not df_etf_raw.empty:
         run_and_save_task("ETF", process_etf_report, "etf_data.json", df_etf_raw, base_trade_date)
+        # --- 新增任务：生成 ETF 名称/代码 文件 ---
+        run_and_save_task("ETF Name List", process_etf_name_list, "etf_name_data.json", df_etf_raw)
     if not df_stock_raw.empty:
         run_and_save_task("A-Share Stock", process_stock_report, "stock_data.json", df_stock_raw, base_trade_date)
         run_and_save_task("A-Share Watchlist", process_stock_watchlist_report, "stock_10days_data.json", df_stock_raw, base_trade_date, a_share_watchlist)
