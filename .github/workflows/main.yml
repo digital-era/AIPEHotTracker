@@ -16,38 +16,34 @@ on:
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
+    
+    # --- 关键修改在这里 ---
+    # 为此作业授予对仓库内容的写权限
+    permissions:
+      contents: write
+    # ----------------------
+
     steps:
       - name: Checkout repository
-        # 步骤1: 检出你的代码
         uses: actions/checkout@v4
 
       - name: Set up Python
-        # 步骤2: 设置 Python 环境
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9' # 指定 Python 版本
+          python-version: '3.9'
 
       - name: Install dependencies
-        # 步骤3: 安装脚本需要的库
         run: |
           python -m pip install --upgrade pip
           pip install pandas akshare requests
 
       - name: Run data fetching script
-        # 步骤4: 运行你的 Python 脚本
         run: python api/index.py
 
       - name: Commit and push if changed
-        # 步骤5: 将生成的文件提交回仓库
         run: |
-          # 配置 Git 用户信息
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
-          # 将 data 目录下的所有变动添加到暂存区
           git add data/
-          
-          # 检查是否有文件变动。如果有，则提交并推送
-          # '|| exit 0' 确保在没有变动时命令不会失败
           git diff --staged --quiet || (git commit -m "chore: Update ETF data" && git push)
           echo "Data commit process finished."
