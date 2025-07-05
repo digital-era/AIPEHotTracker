@@ -168,7 +168,7 @@ if __name__ == "__main__":
     if not df_etf_raw.empty:
         run_and_save_task("ETF", process_etf_report, "etf_data.json", df_etf_raw, base_trade_date)
         # --- 新增任务：生成 ETF 名称/代码 文件 ---
-        run_and_save_task("ETF Name List", process_etf_name_list, "etf_name_data.json", df_etf_raw)
+        #run_and_save_task("ETF Name List", process_etf_name_list, "etf_name_data.json", df_etf_raw)
     if not df_stock_raw.empty:
         run_and_save_task("A-Share Stock", process_stock_report, "stock_data.json", df_stock_raw, base_trade_date)
         run_and_save_task("A-Share Watchlist", process_stock_watchlist_report, "stock_10days_data.json", df_stock_raw, base_trade_date, a_share_watchlist)
