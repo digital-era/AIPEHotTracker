@@ -81,3 +81,4 @@ jobs:
           git diff --staged --quiet || (git commit -m "chore(data): Update ETF data" && git push)
           
           echo "Data commit process finished."
+          # Trivial change to re-register the workflow。
