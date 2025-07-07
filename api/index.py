@@ -9,77 +9,82 @@ from datetime import datetime, timezone, timedelta
 
 # --- 辅助函数 (保持不变) ---
 def read_watchlist_from_json(file_path):
-    # ... (此函数代码不变) ...
+    """从指定的JSON文件读取一个包含代码的列表。"""
     print(f"Reading watchlist from: {file_path}")
     try:
-        with open(file_path, 'r', encoding='utf-8') as f: data = json.load(f)
-        watchlist = [str(item['代码']) for item in data]; print(f"Successfully read {len(watchlist)} codes.")
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        # 假设json文件是 [{ "代码": "...", ... }, ...] 的格式
+        watchlist = [str(item['代码']) for item in data]
+        print(f"Successfully read {len(watchlist)} codes.")
         return watchlist
     except FileNotFoundError:
-        print(f"Warning: Watchlist file not found: {file_path}. Skipping."); return []
+        print(f"Warning: Watchlist file not found: {file_path}. Skipping.")
+        return []
     except Exception as e:
-        print(f"Error reading watchlist file {file_path}: {e}"); return []
+        print(f"Error reading watchlist file {file_path}: {e}")
+        return []
 
-# --- 处理函数 (已修改：不再自己获取数据，而是接收DataFrame作为参数) ---
-
-
-# --- 新增函数：处理 ETF 名称/代码 列表 ---
-def process_etf_name_list(df_raw):
-    """
-    从原始的 ETF DataFrame 中提取'代码'和'名称'列，
-    并重命名为 'code' 和 'name'。
-    """
-    print("\n--- (New Task) Processing ETF Name/Code List ---")
-    
-    # 筛选我们需要的两列
-    df_name_list = df_raw[['代码', '名称']].copy()
-    
-    # 将列名重命名为小写，以符合常见的 JSON key 命名习惯
-    df_name_list.rename(columns={'代码': 'code', '名称': 'name'}, inplace=True)
-    
-    # 直接将处理好的 DataFrame 转换为字典列表并返回
-    return df_name_list.to_dict('records')
-
+# --- 原有处理函数 (保持不变) ---
 def process_etf_report(df_raw, trade_date):
     """处理传入的ETF DataFrame并生成报告。"""
-    print("--- (1/5) Processing ETF Data ---")
+    print("--- (1/x) Processing ETF Data ---")
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']
-    df = df_raw[required_columns].copy(); df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
-    for col in ['Price', 'Percent', 'Amount']: df[col] = pd.to_numeric(df[col], errors='coerce')
-    df.dropna(inplace=True); df['Amount'] = (df['Amount'] / 100_000_000).round(2); df['Price'] = df['Price'].round(3); df['Percent'] = df['Percent'].round(2)
+    df = df_raw[required_columns].copy()
+    df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
+    for col in ['Price', 'Percent', 'Amount']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df.dropna(inplace=True)
+    df['Amount'] = (df['Amount'] / 100_000_000).round(2)
+    df['Price'] = df['Price'].round(3)
+    df['Percent'] = df['Percent'].round(2)
     if df.empty: return {"error": "No valid data."}
-    df_top_up = df.sort_values(by='Percent', ascending=False).head(20); df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
+    df_top_up = df.sort_values(by='Percent', ascending=False).head(20)
+    df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
     return report
 
 def process_stock_report(df_raw, trade_date):
     """处理传入的全市场A股DataFrame并生成报告。"""
-    print("\n--- (2/5) Processing All A-Share Stock Data ---")
+    print("\n--- (2/x) Processing All A-Share Stock Data ---")
     df_filtered = df_raw[~df_raw['代码'].str.startswith(('4', '8')) & ~df_raw['名称'].str.contains('ST|退')].copy()
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额', '市盈率-动态', '市净率', '总市值']
-    df = df_filtered[required_columns].copy(); df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount', '市盈率-动态': 'PE_TTM', '市净率': 'PB', '总市值': 'TotalMarketCap'}, inplace=True)
-    for col in ['Price', 'Percent', 'Amount', 'PE_TTM', 'PB', 'TotalMarketCap']: df[col] = pd.to_numeric(df[col], errors='coerce')
-    df.dropna(inplace=True); df['Amount'] = (df['Amount'] / 100_000_000).round(2); df['TotalMarketCap'] = (df['TotalMarketCap'] / 100_000_000).round(2); df['Price'] = df['Price'].round(2); df['Percent'] = df['Percent'].round(2)
+    df = df_filtered[required_columns].copy()
+    df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount', '市盈率-动态': 'PE_TTM', '市净率': 'PB', '总市值': 'TotalMarketCap'}, inplace=True)
+    for col in ['Price', 'Percent', 'Amount', 'PE_TTM', 'PB', 'TotalMarketCap']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df.dropna(inplace=True)
+    df['Amount'] = (df['Amount'] / 100_000_000).round(2)
+    df['TotalMarketCap'] = (df['TotalMarketCap'] / 100_000_000).round(2)
+    df['Price'] = df['Price'].round(2)
+    df['Percent'] = df['Percent'].round(2)
     if df.empty: return {"error": "No valid data."}
-    df_top_up = df.sort_values(by='Percent', ascending=False).head(20); df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
+    df_top_up = df.sort_values(by='Percent', ascending=False).head(20)
+    df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
     return report
 
 def process_hk_stock_report(df_raw, trade_date):
     """处理传入的全市场港股DataFrame并生成报告。"""
-    print("\n--- (3/5) Processing All Hong Kong Stock Data ---")
-    required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']; df = df_raw[required_columns].copy()
+    print("\n--- (3/x) Processing All Hong Kong Stock Data ---")
+    required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']
+    df = df_raw[required_columns].copy()
     df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
-    for col in ['Price', 'Percent', 'Amount']: df[col] = pd.to_numeric(df[col], errors='coerce')
-    df.dropna(inplace=True); df['Amount'] = (df['Amount'] / 100_000_000).round(2); df['Price'] = df['Price'].round(3); df['Percent'] = df['Percent'].round(2)
+    for col in ['Price', 'Percent', 'Amount']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+    df.dropna(inplace=True)
+    df['Amount'] = (df['Amount'] / 100_000_000).round(2)
+    df['Price'] = df['Price'].round(3)
+    df['Percent'] = df['Percent'].round(2)
     if df.empty: return {"error": "No valid data."}
-    df_top_up = df.sort_values(by='Percent', ascending=False).head(20); df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
+    df_top_up = df.sort_values(by='Percent', ascending=False).head(20)
+    df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
     return report
 
 def process_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
     """在传入的A股DataFrame上，基于watchlist筛选并生成报告。"""
-    print("\n--- (4/5) Processing A-Share Watchlist Data ---")
+    print("\n--- (4/x) Processing A-Share Watchlist Data ---")
     if not watchlist_codes: return {"error": "Watchlist is empty, skipping."}
     df_raw['代码'] = df_raw['代码'].astype(str)
     live_data_map = df_raw.set_index('代码').to_dict('index')
@@ -101,7 +106,7 @@ def process_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
 
 def process_hk_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
     """在传入的港股DataFrame上，基于watchlist筛选并生成报告。"""
-    print("\n--- (5/5) Processing Hong Kong Stock Watchlist Data ---")
+    print("\n--- (5/x) Processing Hong Kong Stock Watchlist Data ---")
     if not watchlist_codes: return {"error": "Watchlist is empty, skipping."}
     df_raw['代码'] = df_raw['代码'].astype(str)
     live_data_map = df_raw.set_index('代码').to_dict('index')
@@ -119,7 +124,88 @@ def process_hk_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
     print(f"Processed {len(result_list)} stocks from the HK Stock watchlist.")
     return result_list
 
-# --- 脚本执行入口 (已重构，先获取所有数据，再分别处理) ---
+
+# --- >>> 新增功能函数 <<< ---
+def process_observe_list_report(df_stock_raw, df_etf_raw, trade_date, observe_list_codes):
+    """
+    根据一个混合观察列表（含股票和ETF），从全量数据中筛选并生成统一格式的报告。
+    ETF缺失的字段（PE, PB, TotalMarketCap）将被赋值为None，以在JSON中生成null。
+    """
+    print("\n--- (NEW TASK) Processing Unified Observe List (Stocks & ETFs) ---")
+    
+    if not observe_list_codes:
+        print("Observe list is empty, skipping.")
+        return {"error": "Observe list is empty, skipping."}
+
+    # 为股票和ETF数据创建高效的查找字典（哈希图）
+    df_stock_raw['代码'] = df_stock_raw['代码'].astype(str)
+    stock_data_map = df_stock_raw.set_index('代码').to_dict('index')
+    
+    df_etf_raw['代码'] = df_etf_raw['代码'].astype(str)
+    etf_data_map = df_etf_raw.set_index('代码').to_dict('index')
+
+    result_list = []
+    
+    # 辅助函数，用于安全地转换和舍入数值，处理NaN为None
+    def safe_round(value, digits, divisor=1):
+        numeric_val = pd.to_numeric(value, errors='coerce')
+        if pd.isna(numeric_val):
+            return None  # 返回None，将在JSON中变为null
+        return round(numeric_val / divisor, digits)
+
+    for code in observe_list_codes:
+        item = None
+        is_stock = False
+        
+        # 首先在股票数据中查找
+        if code in stock_data_map:
+            item = stock_data_map[code]
+            is_stock = True
+        # 如果不是股票，则在ETF数据中查找
+        elif code in etf_data_map:
+            item = etf_data_map[code]
+        
+        # 如果在两个地方都找不到，则跳过
+        if not item:
+            print(f"  - Warning: Code {code} from observe list not found in any dataset.")
+            continue
+
+        if is_stock:
+            # 处理股票数据
+            security_info = {
+                '代码': code, 
+                '名称': item.get('名称'), 
+                'Price': safe_round(item.get('最新价'), 2),
+                'Percent': safe_round(item.get('涨跌幅'), 2),
+                'Amount': safe_round(item.get('成交额'), 2, 100_000_000),
+                'PE_TTM': safe_round(item.get('市盈率-动态'), 2), 
+                'PB': safe_round(item.get('市净率'), 2),
+                'TotalMarketCap': safe_round(item.get('总市值'), 2, 100_000_000),
+                "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), 
+                "trade_date": trade_date
+            }
+        else: # is_etf
+            # 处理ETF数据，缺失字段赋值为None
+            security_info = {
+                '代码': code, 
+                '名称': item.get('名称'), 
+                'Price': safe_round(item.get('最新价'), 3), # ETF价格精度通常更高
+                'Percent': safe_round(item.get('涨跌幅'), 2),
+                'Amount': safe_round(item.get('成交额'), 2, 100_000_000),
+                'PE_TTM': None,         # ETF没有PE，赋值为None -> JSON null
+                'PB': None,             # ETF没有PB，赋值为None -> JSON null
+                'TotalMarketCap': None, # ETF没有市值，赋值为None -> JSON null
+                "update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), 
+                "trade_date": trade_date
+            }
+            
+        result_list.append(security_info)
+        
+    print(f"Processed {len(result_list)} securities from the unified observe list.")
+    return result_list
+
+
+# --- 脚本执行入口 (已重构，集成新功能) ---
 if __name__ == "__main__":
     output_dir = "data"
     os.makedirs(output_dir, exist_ok=True)
@@ -127,10 +213,17 @@ if __name__ == "__main__":
     def run_and_save_task(name, func, file, *args):
         output_filepath = os.path.join(output_dir, file)
         final_data = {}
-        try: final_data = func(*args)
-        except Exception as e: print(f"\nError during {name}: {e}"); final_data = {"error": str(e)}
+        try:
+            pd.set_option('mode.use_inf_as_na', True) # 确保无穷大被视为NaN
+            result = func(*args)
+            final_data = result
+        except Exception as e:
+            print(f"\nError during {name}: {e}")
+            final_data = {"error": str(e)}
+        
         print(f"\nWriting {name} data to {output_filepath}...")
-        with open(output_filepath, 'w', encoding='utf-8') as f: json.dump(final_data, f, ensure_ascii=False, indent=4)
+        with open(output_filepath, 'w', encoding='utf-8') as f: 
+            json.dump(final_data, f, ensure_ascii=False, indent=4)
         print(f"{name} data file generated successfully.")
 
     # --- 阶段 1: 统一获取所有网络数据 ---
@@ -141,9 +234,10 @@ if __name__ == "__main__":
     try:
         df_etf_raw = ak.fund_etf_spot_em()
         print(f"Successfully fetched {len(df_etf_raw)} ETFs.")
-        ts = pd.to_datetime(df_etf_raw['数据日期'].iloc[0])
-        base_trade_date = ts.strftime('%Y-%m-%d')
-        print(f"Base trade date set to: {base_trade_date}")
+        if not df_etf_raw.empty and '数据日期' in df_etf_raw.columns:
+            ts = pd.to_datetime(df_etf_raw['数据日期'].iloc[0])
+            base_trade_date = ts.strftime('%Y-%m-%d')
+            print(f"Base trade date set to: {base_trade_date}")
     except Exception as e:
         print(f"Could not fetch ETF data or extract date: {e}. Using fallback date.")
 
@@ -162,16 +256,23 @@ if __name__ == "__main__":
     # --- 阶段 2: 读取本地 watchlist 文件 ---
     a_share_watchlist = read_watchlist_from_json(os.path.join(output_dir, "ARHot10days_top20.json"))
     hk_share_watchlist = read_watchlist_from_json(os.path.join(output_dir, "HKHot10days_top20.json"))
+    # --- >>> 读取新的统一观察列表 <<< ---
+    observe_list = read_watchlist_from_json(os.path.join(output_dir, "AIPEObserve.json"))
+
 
     # --- 阶段 3: 在内存中处理数据并保存结果 ---
     print("\n--- Starting Data Processing Phase ---")
     if not df_etf_raw.empty:
         run_and_save_task("ETF", process_etf_report, "etf_data.json", df_etf_raw, base_trade_date)
-        # --- 新增任务：生成 ETF 名称/代码 文件 ---
-        #run_and_save_task("ETF Name List", process_etf_name_list, "etf_name_data.json", df_etf_raw)
+
     if not df_stock_raw.empty:
         run_and_save_task("A-Share Stock", process_stock_report, "stock_data.json", df_stock_raw, base_trade_date)
         run_and_save_task("A-Share Watchlist", process_stock_watchlist_report, "stock_10days_data.json", df_stock_raw, base_trade_date, a_share_watchlist)
+    
+    # --- >>> 执行新的统一观察列表任务 <<< ---
+    if not df_stock_raw.empty or not df_etf_raw.empty:
+        run_and_save_task("Unified Observe List", process_observe_list_report, "stock_observe_data.json", df_stock_raw, df_etf_raw, base_trade_date, observe_list)
+        
     if not df_hk_stock_raw.empty:
         run_and_save_task("Hong Kong Stock", process_hk_stock_report, "hk_stock_data.json", df_hk_stock_raw, base_trade_date)
         run_and_save_task("HK Stock Watchlist", process_hk_stock_watchlist_report, "hk_stock_10days_data.json", df_hk_stock_raw, base_trade_date, hk_share_watchlist)
