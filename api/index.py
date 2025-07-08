@@ -214,7 +214,7 @@ if __name__ == "__main__":
     print("\n--- Starting Data Processing Phase ---")
     if not df_etf_raw.empty:
         run_and_save_task("ETF Report", process_etf_report, "etf_data.json", df_etf_raw, base_trade_date)
-    if not df_stock_raw.。empty:
+    if not df_stock_raw.empty:
         run_and_save_task("A-Share Report", process_stock_report, "stock_data.json", df_stock_raw, base_trade_date)
         run_and_save_task("A-Share Watchlist", process_stock_watchlist_report, "stock_10days_data.json", df_stock_raw, base_trade_date, a_share_watchlist)
     if not df_hk_stock_raw.empty:
