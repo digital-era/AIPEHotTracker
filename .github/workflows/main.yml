@@ -43,12 +43,21 @@ jobs:
       - name: Run data fetching script
         run: python api/index.py
 
+      # 提交并推送变动
       - name: Commit and push if changed
+        # 使用 env 块来安全地创建环境变量，避免 shell 语法冲突
+        env:
+          COMMIT_MSG: "chore(data): Update market data (Trigger: ${{ github.event.inputs.trigger_source || github.event_name }})"
         run: |
+          # 配置 git 用户信息
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 添加变动到暂存区
           git add data/
-          # 可以让提交信息更丰富
-          COMMIT_MSG="chore(data): Update market data (Trigger: ${{ github.event.inputs.trigger_source || github.event_name }})"
+          
+          # 检查是否有文件变动，并使用环境变量进行提交
+          # "$COMMIT_MSG" 会被 shell 正确地替换为 env 块中定义的内容
           git diff --staged --quiet || (git commit -m "$COMMIT_MSG" && git push)
+          
           echo "Data commit process finished."
