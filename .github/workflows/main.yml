@@ -10,12 +10,21 @@ on:
     - cron: '0,15,30,45 7-8 * * 1-5'
     
   workflow_dispatch:
-    # 增加一个输入参数，这样可以从API调用时传入
     inputs:
       trigger_source:
         description: 'Source of the trigger (e.g., "manual" or "api_call")'
         required: false
         default: 'manual_ui'
+      # <-- [MANDATORY] 新增 dynamiclist 输入的定义 -->
+      dynamiclist:
+        description: 'A JSON string of A-share stock codes (e.g., ["000001", "600519"])'
+        required: false
+        default: ''
+      # <-- [MANDATORY] 新增 dynamicHKlist 输入的定义 -->
+      dynamicHKlist:
+        description: 'A JSON string of HK-share stock codes (e.g., ["00700", "09988"])'
+        required: false
+        default: ''
 
 jobs:
   build-and-commit:
@@ -37,15 +46,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # [已修复] 使用多行语法避免YAML解析错误
       - name: Log trigger source
         run: |
           echo "Workflow triggered by: ${{ github.event.inputs.trigger_source || github.event_name }}"
 
       - name: Run data fetching script
+        # <-- [RECOMMENDED] 使用 env 块将输入安全地传递为环境变量 -->
+        env:
+          INPUT_DYNAMICLIST: ${{ github.event.inputs.dynamiclist }}
+          INPUT_DYNAMICHKLIST: ${{ github.event.inputs.dynamicHKlist }}
         run: python api/index.py
 
-      # [已修复] 使用 env 块安全设置 commit message
       - name: Commit and push if changed
         env:
           COMMIT_MSG: "chore(data): Update market data (Trigger: ${{ github.event.inputs.trigger_source || github.event_name }})"
