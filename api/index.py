@@ -1,5 +1,5 @@
 # api/index.py
-# 性能优化版：一次获取，多次使用，避免重复的网络请求。
+# 最终版：保留所有旧场景，并新增处理动态参数的场景
 
 import os
 import json
@@ -7,7 +7,7 @@ import pandas as pd
 import akshare as ak
 from datetime import datetime, timezone, timedelta
 
-# --- 辅助函数 (保持不变) ---
+# --- 辅助函数 ---
 def read_watchlist_from_json(file_path):
     # ... (代码不变，省略)
     """从指定的JSON文件读取一个包含代码的列表。"""
@@ -25,10 +25,29 @@ def read_watchlist_from_json(file_path):
         print(f"Error reading watchlist file {file_path}: {e}")
         return []
 
+# --- >>> 新增辅助函数 <<< ---
+def read_flow_info_base(file_path):
+    """
+    读取 FlowInfoBase.json 并将其转换为以股票代码为键的字典以便快速查找。
+    """
+    print(f"Reading flow info from: {file_path}")
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        # 将列表转换为字典，键为'code'
+        flow_map = {str(item['code']): item for item in data}
+        print(f"Successfully created a lookup map for {len(flow_map)} codes from flow info.")
+        return flow_map
+    except FileNotFoundError:
+        print(f"Warning: Flow info file not found: {file_path}. Extra fields will be empty.")
+        return {}
+    except Exception as e:
+        print(f"Error reading or processing flow info file {file_path}: {e}")
+        return {}
+
 # --- 原有处理函数 (保持不变) ---
 def process_etf_report(df_raw, trade_date):
-    # ... (代码不变，省略)
-    """处理传入的ETF DataFrame并生成报告。"""
+    # ... (代码不变)
     print("--- (1/x) Processing ETF Data ---")
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']
     df = df_raw[required_columns].copy(); df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
@@ -40,8 +59,7 @@ def process_etf_report(df_raw, trade_date):
     return report
 
 def process_stock_report(df_raw, trade_date):
-    # ... (代码不变，省略)
-    """处理传入的全市场A股DataFrame并生成报告。"""
+    # ... (代码不变)
     print("\n--- (2/x) Processing All A-Share Stock Data ---")
     df_filtered = df_raw[~df_raw['代码'].str.startswith(('4', '8')) & ~df_raw['名称'].str.contains('ST|退')].copy()
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额', '市盈率-动态', '市净率', '总市值']
@@ -52,10 +70,9 @@ def process_stock_report(df_raw, trade_date):
     df_top_up = df.sort_values(by='Percent', ascending=False).head(20); df_top_down = df.sort_values(by='Percent', ascending=True).head(20)
     report = {"update_time_bjt": datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d %H:%M:%S'), "trade_date": trade_date, "top_up_20": df_top_up.to_dict('records'), "top_down_20": df_top_down.to_dict('records')}
     return report
-
+    
 def process_hk_stock_report(df_raw, trade_date):
-    # ... (代码不变，省略)
-    """处理传入的全市场港股DataFrame并生成报告。"""
+    # ... (代码不变)
     print("\n--- (3/x) Processing All Hong Kong Stock Data ---")
     required_columns = ['代码', '名称', '最新价', '涨跌幅', '成交额']; df = df_raw[required_columns].copy()
     df.rename(columns={'最新价': 'Price', '涨跌幅': 'Percent', '成交额': 'Amount'}, inplace=True)
@@ -67,8 +84,7 @@ def process_hk_stock_report(df_raw, trade_date):
     return report
 
 def process_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
-    # ... (代码不变，省略)
-    """在传入的A股DataFrame上，基于watchlist筛选并生成报告。"""
+    # ... (代码不变)
     print("\n--- (4/x) Processing A-Share Watchlist Data ---")
     if not watchlist_codes: return {"error": "Watchlist is empty, skipping."}
     df_raw['代码'] = df_raw['代码'].astype(str); live_data_map = df_raw.set_index('代码').to_dict('index'); result_list = []
@@ -80,8 +96,7 @@ def process_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
     print(f"Processed {len(result_list)} stocks from the A-Share watchlist."); return result_list
 
 def process_hk_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
-    # ... (代码不变，省略)
-    """在传入的港股DataFrame上，基于watchlist筛选并生成报告。"""
+    # ... (代码不变)
     print("\n--- (5/x) Processing Hong Kong Stock Watchlist Data ---")
     if not watchlist_codes: return {"error": "Watchlist is empty, skipping."}
     df_raw['代码'] = df_raw['代码'].astype(str); live_data_map = df_raw.set_index('代码').to_dict('index'); result_list = []
@@ -92,20 +107,14 @@ def process_hk_stock_watchlist_report(df_raw, trade_date, watchlist_codes):
             result_list.append(stock_info)
     print(f"Processed {len(result_list)} stocks from the HK Stock watchlist."); return result_list
 
-
-# --- >>> 这是关键的、已修复的函数 <<< ---
 def process_observe_list_report(df_stock_raw, df_etf_raw, df_hk_stock_raw, trade_date, observe_list_codes):
-    """
-    根据一个混合观察列表（含A股、港股、ETF），从全量数据中筛选并生成统一格式的报告。
-    非股票标的缺失的字段（PE, PB, TotalMarketCap）将被赋值为None，以在JSON中生成null。
-    """
-    print("\n--- (NEW TASK) Processing Unified Observe List (A-Share, HK-Stock, ETF) ---")
+    # ... (代码不变)
+    print("\n--- Processing Unified Observe List (A-Share, HK-Stock, ETF) ---")
     
     if not observe_list_codes:
         print("Observe list is empty, skipping.")
         return {"error": "Observe list is empty, skipping."}
 
-    # 为所有数据源创建高效的查找字典（哈希图），并增加健壮性检查
     stock_data_map = {}
     if not df_stock_raw.empty:
         df_stock_raw['代码'] = df_stock_raw['代码'].astype(str)
@@ -153,20 +162,52 @@ def process_observe_list_report(df_stock_raw, df_etf_raw, df_hk_stock_raw, trade
         security_info.update(common_info)
         result_list.append(security_info)
         
-    print(f"Processed {len(result_list)} securities from the unified observe list.")
-    # 如果所有数据源都失败了，并且最终列表为空，返回一个更明确的错误信息
+    print(f"Processed {len(result_list)} securities from the list provided.")
     if not result_list and not stock_data_map and not hk_stock_data_map and not etf_data_map:
         return {"error": "All underlying data sources failed to fetch data."}
         
     return result_list
 
+# --- >>> 新增处理函数，用于A股动态列表 <<< ---
+def process_dynamic_a_share_report(df_stock_raw, trade_date, dynamic_codes, flow_info_map):
+    """
+    处理动态传入的A股列表，并从 flow_info_map 中补充额外字段。
+    """
+    print("\n--- (NEW DYNAMIC TASK) Processing Dynamic A-Share List with Flow Info ---")
+    if not dynamic_codes:
+        return {"error": "Dynamic A-share list is empty."}
+    
+    # 使用通用的 process_observe_list_report 获取基础数据
+    # 我们传入一个空的ETF和港股DataFrame，以确保它只查找A股
+    base_results = process_observe_list_report(df_stock_raw, pd.DataFrame(), pd.DataFrame(), trade_date, dynamic_codes)
+    
+    if "error" in base_results:
+        return base_results
 
-# --- 脚本执行入口 (保持不变) ---
+    # 需要补充的字段列表
+    extra_fields = ['PotScore', '总净流入占比_5日总和', '主力净流入-净占比', 'l2name', 'Price20-day-MA_IsUp']
+    
+    # 补充额外信息
+    enriched_results = []
+    for stock_item in base_results:
+        code = stock_item['代码']
+        flow_data = flow_info_map.get(code, {}) # 从映射中安全地获取数据
+        
+        for field in extra_fields:
+            stock_item[field] = flow_data.get(field) # 如果字段不存在，则值为None (JSON中的null)
+            
+        enriched_results.append(stock_item)
+        
+    print(f"Enriched {len(enriched_results)} stocks with flow information.")
+    return enriched_results
+
+# --- 脚本执行入口 ---
 if __name__ == "__main__":
     output_dir = "data"
     os.makedirs(output_dir, exist_ok=True)
 
     def run_and_save_task(name, func, file, *args):
+        # ... (此辅助函数保持不变)
         output_filepath = os.path.join(output_dir, file)
         final_data = {}
         print(f"\n[{name}] -> Starting...")
@@ -177,13 +218,13 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"[{name}] -> Error: {e}")
             import traceback
-            traceback.print_exc() # 打印详细的错误堆栈
+            traceback.print_exc()
             final_data = {"error": str(e)}
         with open(output_filepath, 'w', encoding='utf-8') as f:
             json.dump(final_data, f, ensure_ascii=False, indent=4)
         print(f"[{name}] -> Finished. Data saved to {output_filepath}")
 
-    # --- 阶段 1: 统一获取所有网络数据 ---
+    # --- 阶段 1: 统一获取所有网络数据 (保持不变) ---
     print("--- Starting Data Acquisition Phase ---")
     base_trade_date = datetime.now(timezone(timedelta(hours=8))).strftime('%Y-%m-%d')
     df_etf_raw, df_stock_raw, df_hk_stock_raw = pd.DataFrame(), pd.DataFrame(), pd.DataFrame()
@@ -204,14 +245,40 @@ if __name__ == "__main__":
         print(f"Successfully fetched {len(df_hk_stock_raw)} HK stocks.")
     except Exception as e: print(f"Could not fetch HK stock data: {e}")
 
-    # --- 阶段 2: 读取本地 watchlist 文件 ---
-    print("\n--- Reading Local Watchlist Files ---")
+    # --- 阶段 2: 读取本地文件和动态输入 ---
+    print("\n--- Reading Local Files & Dynamic Inputs ---")
+    
+    # (新) 读取 FlowInfoBase 文件，为A股动态处理做准备
+    flow_info_map = read_flow_info_base(os.path.join(output_dir, "FlowInfoBase.json"))
+
+    # (旧) 无条件读取本地 watchlist 文件，用于常规任务
     a_share_watchlist = read_watchlist_from_json(os.path.join(output_dir, "ARHot10days_top20.json"))
     hk_share_watchlist = read_watchlist_from_json(os.path.join(output_dir, "HKHot10days_top20.json"))
     observe_list = read_watchlist_from_json(os.path.join(output_dir, "AIPEObserve.json"))
 
-    # --- 阶段 3: 在内存中处理数据并保存结果 ---
+    # (新) 检查并解析来自 GitHub Actions 的动态输入
+    dynamic_a_list, dynamic_hk_list = [], []
+    dynamic_a_list_str = os.environ.get('INPUT_DYNAMICLIST')
+    if dynamic_a_list_str:
+        try:
+            dynamic_a_list = json.loads(dynamic_a_list_str)
+            print(f"Found and parsed {len(dynamic_a_list)} codes from dynamic A-share list input.")
+        except json.JSONDecodeError:
+            print(f"Error: Could not parse dynamic A-share list input: '{dynamic_a_list_str}'.")
+    
+    dynamic_hk_list_str = os.environ.get('INPUT_DYNAMICHKLIST')
+    if dynamic_hk_list_str:
+        try:
+            dynamic_hk_list = json.loads(dynamic_hk_list_str)
+            print(f"Found and parsed {len(dynamic_hk_list)} codes from dynamic HK-share list input.")
+        except json.JSONDecodeError:
+            print(f"Error: Could not parse dynamic HK-share list input: '{dynamic_hk_list_str}'.")
+
+
+    # --- 阶段 3: 执行任务并保存结果 ---
     print("\n--- Starting Data Processing Phase ---")
+    
+    # --- 始终执行的常规任务 ---
     if not df_etf_raw.empty:
         run_and_save_task("ETF Report", process_etf_report, "etf_data.json", df_etf_raw, base_trade_date)
     if not df_stock_raw.empty:
@@ -221,8 +288,35 @@ if __name__ == "__main__":
         run_and_save_task("HK Stock Report", process_hk_stock_report, "hk_stock_data.json", df_hk_stock_raw, base_trade_date)
         run_and_save_task("HK Stock Watchlist", process_hk_stock_watchlist_report, "hk_stock_10days_data.json", df_hk_stock_raw, base_trade_date, hk_share_watchlist)
     
-    # --- >>> 执行包含港股的统一观察列表任务 <<< ---
+    # 统一观察列表任务
     if not df_stock_raw.empty or not df_etf_raw.empty or not df_hk_stock_raw.empty:
         run_and_save_task("Unified Observe List", process_observe_list_report, "stock_observe_data.json", df_stock_raw, df_etf_raw, df_hk_stock_raw, base_trade_date, observe_list)
+        
+    # --- >>> 按需执行的动态任务 <<< ---
+    # 如果 dynamic_a_list 有内容，则执行A股动态任务
+    if dynamic_a_list and not df_stock_raw.empty:
+        run_and_save_task(
+            "Dynamic A-Share List", 
+            process_dynamic_a_share_report, 
+            "stock_dynamic_data.json", 
+            df_stock_raw, 
+            base_trade_date, 
+            dynamic_a_list, 
+            flow_info_map
+        )
+        
+    # 如果 dynamic_hk_list 有内容，则执行港股动态任务
+    # 这里巧妙地复用了 process_observe_list_report，因为它能处理纯港股列表
+    if dynamic_hk_list and not df_hk_stock_raw.empty:
+        run_and_save_task(
+            "Dynamic HK-Share List",
+            process_observe_list_report,
+            "hk_stock_dynamic_data.json",
+            pd.DataFrame(), # 传入空的A股数据
+            pd.DataFrame(), # 传入空的ETF数据
+            df_hk_stock_raw,
+            base_trade_date,
+            dynamic_hk_list
+        )
 
     print("\nAll tasks finished.")
