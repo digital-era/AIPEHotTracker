@@ -20,13 +20,24 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(response).encode('utf-8'))
             return
 
-        # --- 调用 GitHub API ---
-        # 你的工作流文件名，例如 main.yml
-        workflow_file_name = "main.yml" 
-        # 你要触发工作流的分支
-        branch = "main"
+        # --- 解析传入的POST请求体 ---
+        content_length = int(self.headers.get('Content-Length', 0))
+        post_data_raw = self.rfile.read(content_length)
+        post_data = {}
+        if post_data_raw:
+            try:
+                post_data = json.loads(post_data_raw)
+            except json.JSONDecodeError:
+                self.send_response(400) # Bad Request
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                response = {"error": "Invalid JSON format in request body."}
+                self.wfile.write(json.dumps(response).encode('utf-8'))
+                return
 
-        # GitHub API URL for triggering a workflow_dispatch event
+        # --- 调用 GitHub API ---
+        workflow_file_name = "main.yml" 
+        branch = "main"
         url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/actions/workflows/{workflow_file_name}/dispatches"
 
         headers = {
@@ -34,11 +45,25 @@ class handler(BaseHTTPRequestHandler):
             "Authorization": f"token {token}"
         }
 
+        # --- 构建包含动态参数的 inputs ---
+        # 基础 inputs
+        workflow_inputs = {
+            "trigger_source": "api_call"
+        }
+        
+        # 检查并添加 dynamiclist (A股) 和 dynamicHKlist (H股)
+        # GitHub Actions 的 inputs 只接受字符串，所以我们将列表转换为 JSON 字符串
+        dynamic_list_a = post_data.get('dynamiclist')
+        if dynamic_list_a and isinstance(dynamic_list_a, list):
+            workflow_inputs['dynamiclist'] = json.dumps(dynamic_list_a)
+
+        dynamic_list_hk = post_data.get('dynamicHKlist')
+        if dynamic_list_hk and isinstance(dynamic_list_hk, list):
+            workflow_inputs['dynamicHKlist'] = json.dumps(dynamic_list_hk)
+
         data = {
             "ref": branch,
-            "inputs": {
-                "trigger_source": "api_call" # 可以添加一个输入，方便在日志中区分
-            }
+            "inputs": workflow_inputs
         }
         
         try:
@@ -47,12 +72,13 @@ class handler(BaseHTTPRequestHandler):
 
             # GitHub 成功接收请求后会返回 204 No Content
             if res.status_code == 204:
-                self.send_response(202) # 202 Accepted 表示请求已接收，正在处理
+                self.send_response(202) # 202 Accepted
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
                 response = {
                     "message": "Workflow triggered successfully.",
-                    "details": f"Check the 'Actions' tab in your GitHub repository '{repo_owner}/{repo_name}' for progress."
+                    "details": f"Check the 'Actions' tab in your GitHub repository '{repo_owner}/{repo_name}' for progress.",
+                    "sent_inputs": workflow_inputs # 返回发送的参数，便于调试
                 }
                 self.wfile.write(json.dumps(response).encode('utf-8'))
             else:
@@ -61,7 +87,7 @@ class handler(BaseHTTPRequestHandler):
                 self.end_headers()
                 response = {
                     "error": "Failed to trigger GitHub workflow.",
-                    "github_response": res.json()
+                    "github_response": res.text # 使用 res.text 获取更详细的错误信息
                 }
                 self.wfile.write(json.dumps(response).encode('utf-8'))
 
@@ -75,7 +101,7 @@ class handler(BaseHTTPRequestHandler):
         return
 
     def do_GET(self):
-        # 为了方便，可以给 GET 请求一个提示信息
+        # 保持不变
         self.send_response(405) # 405 Method Not Allowed
         self.send_header('Content-type', 'application/json')
         self.send_header('Allow', 'POST')
