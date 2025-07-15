@@ -1,5 +1,5 @@
 {
-    "update_time_bjt": "2025-07-15 12:56:46",
+    "update_time_bjt": "2025-07-15 13:01:27",
     "trade_date": "2025-07-15",
     "top_up_20": [
         {
@@ -117,20 +117,10 @@
             "名称": "金浦钛业",
             "Price": 3.05,
             "Percent": 10.11,
-            "Amount": 0.47,
+            "Amount": 0.48,
             "PE_TTM": -48.91,
             "PB": 2.67,
             "TotalMarketCap": 30.1
-        },
-        {
-            "代码": "601003",
-            "名称": "柳钢股份",
-            "Price": 5.57,
-            "Percent": 10.08,
-            "Amount": 9.56,
-            "PE_TTM": 13.7,
-            "PB": 1.65,
-            "TotalMarketCap": 142.75
         },
         {
             "代码": "603176",
@@ -141,6 +131,16 @@
             "PE_TTM": -19.05,
             "PB": 3.03,
             "TotalMarketCap": 32.11
+        },
+        {
+            "代码": "601003",
+            "名称": "柳钢股份",
+            "Price": 5.57,
+            "Percent": 10.08,
+            "Amount": 9.56,
+            "PE_TTM": 13.7,
+            "PB": 1.65,
+            "TotalMarketCap": 142.75
         },
         {
             "代码": "601609",
@@ -157,7 +157,7 @@
             "名称": "远 望 谷",
             "Price": 7.24,
             "Percent": 10.03,
-            "Amount": 2.4,
+            "Amount": 2.44,
             "PE_TTM": -55.27,
             "PB": 3.57,
             "TotalMarketCap": 53.56
@@ -177,7 +177,7 @@
             "名称": "跃岭股份",
             "Price": 14.37,
             "Percent": 10.03,
-            "Amount": 3.57,
+            "Amount": 3.59,
             "PE_TTM": 132.57,
             "PB": 3.61,
             "TotalMarketCap": 36.79
@@ -259,7 +259,7 @@
             "名称": "兴民智通",
             "Price": 6.9,
             "Percent": -10.04,
-            "Amount": 0.91,
+            "Amount": 0.92,
             "PE_TTM": 7.91,
             "PB": 3.1,
             "TotalMarketCap": 42.82
@@ -275,21 +275,11 @@
             "TotalMarketCap": 32.44
         },
         {
-            "代码": "002052",
-            "名称": "同洲电子",
-            "Price": 11.15,
-            "Percent": -10.01,
-            "Amount": 4.75,
-            "PE_TTM": 16.54,
-            "PB": 39.07,
-            "TotalMarketCap": 83.17
-        },
-        {
             "代码": "000553",
             "名称": "安道麦A",
             "Price": 6.92,
             "Percent": -10.01,
-            "Amount": 0.91,
+            "Amount": 0.92,
             "PE_TTM": 26.67,
             "PB": 0.84,
             "TotalMarketCap": 161.22
@@ -315,16 +305,6 @@
             "TotalMarketCap": 36.7
         },
         {
-            "代码": "605336",
-            "名称": "帅丰电器",
-            "Price": 19.97,
-            "Percent": -10.0,
-            "Amount": 1.01,
-            "PE_TTM": -710.75,
-            "PB": 1.96,
-            "TotalMarketCap": 36.63
-        },
-        {
             "代码": "002295",
             "名称": "精艺股份",
             "Price": 10.53,
@@ -335,14 +315,14 @@
             "TotalMarketCap": 26.39
         },
         {
-            "代码": "002365",
-            "名称": "永安药业",
-            "Price": 23.05,
+            "代码": "605336",
+            "名称": "帅丰电器",
+            "Price": 19.97,
             "Percent": -10.0,
-            "Amount": 7.99,
-            "PE_TTM": -388.83,
-            "PB": 3.49,
-            "TotalMarketCap": 67.92
+            "Amount": 1.01,
+            "PE_TTM": -710.75,
+            "PB": 1.96,
+            "TotalMarketCap": 36.63
         },
         {
             "代码": "603716",
@@ -353,6 +333,16 @@
             "PE_TTM": -74.69,
             "PB": 4.9,
             "TotalMarketCap": 42.79
+        },
+        {
+            "代码": "002365",
+            "名称": "永安药业",
+            "Price": 23.05,
+            "Percent": -10.0,
+            "Amount": 8.07,
+            "PE_TTM": -388.83,
+            "PB": 3.49,
+            "TotalMarketCap": 67.92
         },
         {
             "代码": "600148",
@@ -375,11 +365,21 @@
             "TotalMarketCap": 46.92
         },
         {
+            "代码": "002052",
+            "名称": "同洲电子",
+            "Price": 11.16,
+            "Percent": -9.93,
+            "Amount": 4.76,
+            "PE_TTM": 16.56,
+            "PB": 39.11,
+            "TotalMarketCap": 83.25
+        },
+        {
             "代码": "002491",
             "名称": "通鼎互联",
             "Price": 5.17,
             "Percent": -9.93,
-            "Amount": 0.76,
+            "Amount": 0.77,
             "PE_TTM": 12.08,
             "PB": 2.38,
             "TotalMarketCap": 63.59
