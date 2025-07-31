@@ -1,26 +1,74 @@
 [
     {
+        "代码": "600900",
+        "名称": "长江电力",
+        "Price": 27.9,
+        "Percent": -2.79,
+        "Amount": 45.59,
+        "PE_TTM": 26.29,
+        "PB": 3.31,
+        "TotalMarketCap": 6826.63,
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
+        "代码": "000333",
+        "名称": "美的集团",
+        "Price": 70.13,
+        "Percent": -2.75,
+        "Amount": 29.81,
+        "PE_TTM": 10.83,
+        "PB": 2.62,
+        "TotalMarketCap": 5382.06,
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
         "代码": "518880",
         "名称": "黄金ETF",
         "Price": 7.343,
         "Percent": -0.46,
-        "Amount": 14.87,
+        "Amount": 15.1,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
         "代码": "510300",
         "名称": "沪深300ETF",
-        "Price": 4.188,
-        "Percent": -1.04,
-        "Amount": 23.11,
+        "Price": 4.183,
+        "Percent": -1.16,
+        "Amount": 23.6,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
+        "代码": "600085",
+        "名称": "同仁堂",
+        "Price": 36.28,
+        "Percent": -1.36,
+        "Amount": 2.22,
+        "PE_TTM": 21.37,
+        "PB": 3.8,
+        "TotalMarketCap": 497.57,
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
+        "代码": "601899",
+        "名称": "紫金矿业",
+        "Price": 19.21,
+        "Percent": -3.08,
+        "Amount": 27.94,
+        "PE_TTM": 12.55,
+        "PB": 3.68,
+        "TotalMarketCap": 5105.55,
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
@@ -28,11 +76,23 @@
         "名称": "标普500ETF",
         "Price": 2.199,
         "Percent": 0.87,
-        "Amount": 1.83,
+        "Amount": 1.87,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
+        "代码": "603119",
+        "名称": "浙江荣泰",
+        "Price": 56.35,
+        "Percent": 3.04,
+        "Amount": 6.94,
+        "PE_TTM": 86.1,
+        "PB": 11.28,
+        "TotalMarketCap": 204.97,
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
@@ -40,35 +100,59 @@
         "名称": "纳指ETF",
         "Price": 1.705,
         "Percent": 1.49,
-        "Amount": 3.6,
+        "Amount": 3.83,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
         "代码": "513290",
         "名称": "纳指生物科技ETF",
-        "Price": 1.175,
-        "Percent": -0.09,
-        "Amount": 0.53,
+        "Price": 1.176,
+        "Percent": 0.0,
+        "Amount": 0.6,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
+        "代码": "000725",
+        "名称": "京东方Ａ",
+        "Price": 4.07,
+        "Percent": -0.25,
+        "Amount": 10.8,
+        "PE_TTM": 23.59,
+        "PB": 1.17,
+        "TotalMarketCap": 1522.74,
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
         "代码": "159781",
         "名称": "科创创业ETF",
-        "Price": 0.624,
-        "Percent": 0.97,
-        "Amount": 1.02,
+        "Price": 0.622,
+        "Percent": 0.65,
+        "Amount": 1.06,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
+        "trade_date": "2025-07-31"
+    },
+    {
+        "代码": "601878",
+        "名称": "浙商证券",
+        "Price": 11.52,
+        "Percent": -1.2,
+        "Amount": 4.23,
+        "PE_TTM": 22.92,
+        "PB": 1.47,
+        "TotalMarketCap": 526.9,
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
@@ -80,7 +164,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
@@ -92,19 +176,19 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
         "代码": "510050",
         "名称": "上证50ETF",
-        "Price": 2.911,
-        "Percent": -1.09,
-        "Amount": 15.41,
+        "Price": 2.912,
+        "Percent": -1.05,
+        "Amount": 15.67,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
@@ -116,7 +200,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     },
     {
@@ -128,7 +212,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-07-31 13:04:41",
+        "update_time_bjt": "2025-07-31 13:10:34",
         "trade_date": "2025-07-31"
     }
 ]
