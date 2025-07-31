@@ -1,5 +1,5 @@
 {
-    "update_time_bjt": "2025-07-31 12:56:01",
+    "update_time_bjt": "2025-07-31 13:01:27",
     "trade_date": "2025-07-31",
     "top_up_20": [
         {
@@ -23,6 +23,16 @@
             "TotalMarketCap": 47.03
         },
         {
+            "代码": "300579",
+            "名称": "数字认证",
+            "Price": 36.6,
+            "Percent": 20.0,
+            "Amount": 11.93,
+            "PE_TTM": -113.75,
+            "PB": 11.31,
+            "TotalMarketCap": 98.82
+        },
+        {
             "代码": "301489",
             "名称": "思泉新材",
             "Price": 103.66,
@@ -41,16 +51,6 @@
             "PE_TTM": 70.73,
             "PB": 4.37,
             "TotalMarketCap": 158.27
-        },
-        {
-            "代码": "300579",
-            "名称": "数字认证",
-            "Price": 36.6,
-            "Percent": 20.0,
-            "Amount": 11.93,
-            "PE_TTM": -113.75,
-            "PB": 11.31,
-            "TotalMarketCap": 98.82
         },
         {
             "代码": "688110",
@@ -207,22 +207,12 @@
         {
             "代码": "001221",
             "名称": "C悍高",
-            "Price": 63.63,
-            "Percent": -20.46,
-            "Amount": 10.65,
-            "PE_TTM": 55.05,
-            "PB": 10.73,
-            "TotalMarketCap": 254.53
-        },
-        {
-            "代码": "001226",
-            "名称": "拓山重工",
-            "Price": 40.05,
-            "Percent": -9.86,
-            "Amount": 2.53,
-            "PE_TTM": 92.18,
-            "PB": 4.15,
-            "TotalMarketCap": 29.9
+            "Price": 63.8,
+            "Percent": -20.25,
+            "Amount": 10.68,
+            "PE_TTM": 55.2,
+            "PB": 10.76,
+            "TotalMarketCap": 255.21
         },
         {
             "代码": "605178",
@@ -247,12 +237,22 @@
         {
             "代码": "002037",
             "名称": "保利联合",
-            "Price": 13.84,
-            "Percent": -9.42,
-            "Amount": 9.75,
-            "PE_TTM": -27.74,
-            "PB": 3.54,
-            "TotalMarketCap": 66.97
+            "Price": 13.8,
+            "Percent": -9.69,
+            "Amount": 9.8,
+            "PE_TTM": -27.66,
+            "PB": 3.53,
+            "TotalMarketCap": 66.78
+        },
+        {
+            "代码": "001226",
+            "名称": "拓山重工",
+            "Price": 40.18,
+            "Percent": -9.57,
+            "Amount": 2.54,
+            "PE_TTM": 92.48,
+            "PB": 4.16,
+            "TotalMarketCap": 30.0
         },
         {
             "代码": "301038",
@@ -287,12 +287,12 @@
         {
             "代码": "001234",
             "名称": "泰慕士",
-            "Price": 23.55,
-            "Percent": -8.37,
+            "Price": 23.59,
+            "Percent": -8.21,
             "Amount": 2.62,
-            "PE_TTM": 30.95,
-            "PB": 2.88,
-            "TotalMarketCap": 25.77
+            "PE_TTM": 31.0,
+            "PB": 2.89,
+            "TotalMarketCap": 25.81
         },
         {
             "代码": "601929",
@@ -315,16 +315,6 @@
             "TotalMarketCap": 38.74
         },
         {
-            "代码": "000802",
-            "名称": "北京文化",
-            "Price": 5.65,
-            "Percent": -7.53,
-            "Amount": 3.41,
-            "PE_TTM": -4.64,
-            "PB": 4.67,
-            "TotalMarketCap": 40.45
-        },
-        {
             "代码": "300600",
             "名称": "国瑞科技",
             "Price": 16.71,
@@ -345,11 +335,21 @@
             "TotalMarketCap": 87.45
         },
         {
+            "代码": "000802",
+            "名称": "北京文化",
+            "Price": 5.67,
+            "Percent": -7.2,
+            "Amount": 3.44,
+            "PE_TTM": -4.66,
+            "PB": 4.68,
+            "TotalMarketCap": 40.59
+        },
+        {
             "代码": "002512",
             "名称": "达华智能",
             "Price": 4.01,
             "Percent": -7.18,
-            "Amount": 4.01,
+            "Amount": 4.03,
             "PE_TTM": -29.75,
             "PB": 9.86,
             "TotalMarketCap": 46.0
@@ -375,16 +375,6 @@
             "TotalMarketCap": 32.34
         },
         {
-            "代码": "000921",
-            "名称": "海信家电",
-            "Price": 25.3,
-            "Percent": -6.99,
-            "Amount": 9.42,
-            "PE_TTM": 8.44,
-            "PB": 2.19,
-            "TotalMarketCap": 350.37
-        },
-        {
             "代码": "603616",
             "名称": "韩建河山",
             "Price": 6.86,
@@ -395,14 +385,24 @@
             "TotalMarketCap": 26.84
         },
         {
+            "代码": "000921",
+            "名称": "海信家电",
+            "Price": 25.32,
+            "Percent": -6.91,
+            "Amount": 9.52,
+            "PE_TTM": 8.44,
+            "PB": 2.19,
+            "TotalMarketCap": 350.65
+        },
+        {
             "代码": "001216",
             "名称": "华瓷股份",
-            "Price": 17.36,
-            "Percent": -6.82,
-            "Amount": 5.1,
-            "PE_TTM": 21.72,
+            "Price": 17.37,
+            "Percent": -6.76,
+            "Amount": 5.12,
+            "PE_TTM": 21.74,
             "PB": 2.61,
-            "TotalMarketCap": 43.72
+            "TotalMarketCap": 43.75
         }
     ]
 }
