@@ -1,56 +1,26 @@
 {
-    "update_time_bjt": "2025-08-12 14:29:18",
+    "update_time_bjt": "2025-08-12 14:33:37",
     "trade_date": "2025-08-12",
     "top_up_20": [
         {
             "代码": "301632",
             "名称": "N广建科",
-            "Price": 35.02,
-            "Percent": 433.84,
-            "Amount": 18.53,
-            "PE_TTM": -260.44,
-            "PB": 5.57,
-            "TotalMarketCap": 146.58
+            "Price": 33.5,
+            "Percent": 410.67,
+            "Amount": 18.67,
+            "PE_TTM": -249.14,
+            "PB": 5.32,
+            "TotalMarketCap": 140.22
         },
         {
             "代码": "300815",
             "名称": "玉禾田",
             "Price": 29.5,
             "Percent": 20.02,
-            "Amount": 21.52,
+            "Amount": 21.56,
             "PE_TTM": 18.23,
             "PB": 2.84,
             "TotalMarketCap": 117.58
-        },
-        {
-            "代码": "688702",
-            "名称": "盛科通信-U",
-            "Price": 78.48,
-            "Percent": 20.0,
-            "Amount": 7.18,
-            "PE_TTM": -529.3,
-            "PB": 13.82,
-            "TotalMarketCap": 321.77
-        },
-        {
-            "代码": "688584",
-            "名称": "上海合晶",
-            "Price": 22.86,
-            "Percent": 20.0,
-            "Amount": 5.46,
-            "PE_TTM": 198.0,
-            "PB": 3.77,
-            "TotalMarketCap": 152.12
-        },
-        {
-            "代码": "688256",
-            "名称": "寒武纪-U",
-            "Price": 848.88,
-            "Percent": 20.0,
-            "Amount": 140.53,
-            "PE_TTM": 249.76,
-            "PB": 60.24,
-            "TotalMarketCap": 3551.29
         },
         {
             "代码": "300637",
@@ -61,6 +31,36 @@
             "PE_TTM": 85.48,
             "PB": 4.86,
             "TotalMarketCap": 34.37
+        },
+        {
+            "代码": "688256",
+            "名称": "寒武纪-U",
+            "Price": 848.88,
+            "Percent": 20.0,
+            "Amount": 143.57,
+            "PE_TTM": 249.76,
+            "PB": 60.24,
+            "TotalMarketCap": 3551.29
+        },
+        {
+            "代码": "688584",
+            "名称": "上海合晶",
+            "Price": 22.86,
+            "Percent": 20.0,
+            "Amount": 5.49,
+            "PE_TTM": 198.0,
+            "PB": 3.77,
+            "TotalMarketCap": 152.12
+        },
+        {
+            "代码": "688702",
+            "名称": "盛科通信-U",
+            "Price": 78.48,
+            "Percent": 20.0,
+            "Amount": 7.4,
+            "PE_TTM": -529.3,
+            "PB": 13.82,
+            "TotalMarketCap": 321.77
         },
         {
             "代码": "300620",
@@ -75,132 +75,132 @@
         {
             "代码": "301486",
             "名称": "致尚科技",
-            "Price": 91.14,
-            "Percent": 18.92,
-            "Amount": 16.61,
-            "PE_TTM": 124.31,
-            "PB": 4.77,
-            "TotalMarketCap": 117.28
+            "Price": 91.8,
+            "Percent": 19.78,
+            "Amount": 16.91,
+            "PE_TTM": 125.21,
+            "PB": 4.8,
+            "TotalMarketCap": 118.13
         },
         {
             "代码": "688273",
             "名称": "麦澜德",
-            "Price": 53.02,
-            "Percent": 18.48,
-            "Amount": 7.03,
-            "PE_TTM": 33.25,
-            "PB": 4.04,
-            "TotalMarketCap": 53.02
-        },
-        {
-            "代码": "301018",
-            "名称": "申菱环境",
-            "Price": 56.56,
-            "Percent": 14.22,
-            "Amount": 14.48,
-            "PE_TTM": 69.49,
-            "PB": 5.9,
-            "TotalMarketCap": 150.48
-        },
-        {
-            "代码": "300453",
-            "名称": "三鑫医疗",
-            "Price": 10.7,
-            "Percent": 13.71,
-            "Amount": 8.16,
-            "PE_TTM": 24.28,
-            "PB": 4.15,
-            "TotalMarketCap": 55.9
+            "Price": 53.13,
+            "Percent": 18.73,
+            "Amount": 7.05,
+            "PE_TTM": 33.32,
+            "PB": 4.05,
+            "TotalMarketCap": 53.13
         },
         {
             "代码": "301173",
             "名称": "毓恬冠佳",
-            "Price": 53.99,
-            "Percent": 13.66,
-            "Amount": 3.97,
-            "PE_TTM": 58.68,
-            "PB": 3.45,
-            "TotalMarketCap": 47.42
+            "Price": 54.2,
+            "Percent": 14.11,
+            "Amount": 3.99,
+            "PE_TTM": 58.9,
+            "PB": 3.47,
+            "TotalMarketCap": 47.61
+        },
+        {
+            "代码": "301018",
+            "名称": "申菱环境",
+            "Price": 56.4,
+            "Percent": 13.89,
+            "Amount": 14.55,
+            "PE_TTM": 69.3,
+            "PB": 5.89,
+            "TotalMarketCap": 150.05
+        },
+        {
+            "代码": "300453",
+            "名称": "三鑫医疗",
+            "Price": 10.62,
+            "Percent": 12.86,
+            "Amount": 8.23,
+            "PE_TTM": 24.1,
+            "PB": 4.12,
+            "TotalMarketCap": 55.48
         },
         {
             "代码": "688498",
             "名称": "源杰科技",
-            "Price": 273.99,
-            "Percent": 12.34,
-            "Amount": 11.33,
-            "PE_TTM": 411.11,
-            "PB": 11.29,
-            "TotalMarketCap": 235.49
-        },
-        {
-            "代码": "301502",
-            "名称": "华阳智能",
-            "Price": 60.5,
-            "Percent": 11.79,
-            "Amount": 4.17,
-            "PE_TTM": 109.75,
-            "PB": 4.24,
-            "TotalMarketCap": 34.54
-        },
-        {
-            "代码": "300050",
-            "名称": "世纪鼎利",
-            "Price": 6.56,
-            "Percent": 11.75,
-            "Amount": 7.86,
-            "PE_TTM": 452.23,
-            "PB": 9.01,
-            "TotalMarketCap": 35.74
+            "Price": 273.56,
+            "Percent": 12.16,
+            "Amount": 11.53,
+            "PE_TTM": 410.47,
+            "PB": 11.27,
+            "TotalMarketCap": 235.12
         },
         {
             "代码": "300398",
             "名称": "飞凯材料",
-            "Price": 23.13,
-            "Percent": 11.52,
-            "Amount": 25.33,
-            "PE_TTM": 27.38,
-            "PB": 2.88,
-            "TotalMarketCap": 131.13
-        },
-        {
-            "代码": "300671",
-            "名称": "富满微",
-            "Price": 43.61,
-            "Percent": 11.22,
-            "Amount": 17.05,
-            "PE_TTM": -94.75,
-            "PB": 5.9,
-            "TotalMarketCap": 94.95
-        },
-        {
-            "代码": "300857",
-            "名称": "协创数据",
-            "Price": 85.4,
-            "Percent": 10.95,
-            "Amount": 24.04,
-            "PE_TTM": 32.35,
-            "PB": 8.07,
-            "TotalMarketCap": 295.59
+            "Price": 23.21,
+            "Percent": 11.91,
+            "Amount": 25.65,
+            "PE_TTM": 27.47,
+            "PB": 2.89,
+            "TotalMarketCap": 131.59
         },
         {
             "代码": "688626",
             "名称": "翔宇医疗",
-            "Price": 64.33,
-            "Percent": 10.89,
-            "Amount": 5.86,
-            "PE_TTM": 112.12,
-            "PB": 5.16,
-            "TotalMarketCap": 102.93
+            "Price": 64.59,
+            "Percent": 11.34,
+            "Amount": 5.93,
+            "PE_TTM": 112.57,
+            "PB": 5.18,
+            "TotalMarketCap": 103.34
         },
         {
-            "代码": "688376",
-            "名称": "美埃科技",
-            "Price": 50.85,
-            "Percent": 10.66,
-            "Amount": 1.93,
-            "PE_TTM": 40.76,
-            "PB": 3.77,
-            "TotalMarketCap": 68.34
+            "代码": "300050",
+            "名称": "世纪鼎利",
+            "Price": 6.53,
+            "Percent": 11.24,
+            "Amount": 7.95,
+            "PE_TTM": 450.16,
+            "PB": 8.97,
+            "TotalMarketCap": 35.58
+        },
+        {
+            "代码": "300857",
+            "名称": "协创数据",
+            "Price": 85.48,
+            "Percent": 11.06,
+            "Amount": 24.29,
+            "PE_TTM": 32.38,
+            "PB": 8.08,
+            "TotalMarketCap": 295.86
+        },
+        {
+            "代码": "300806",
+            "名称": "斯迪克",
+            "Price": 20.88,
+            "Percent": 10.83,
+            "Amount": 6.79,
+            "PE_TTM": 245.44,
+            "PB": 4.25,
+            "TotalMarketCap": 94.65
+        },
+        {
+            "代码": "300671",
+            "名称": "富满微",
+            "Price": 43.33,
+            "Percent": 10.51,
+            "Amount": 17.13,
+            "PE_TTM": -94.14,
+            "PB": 5.86,
+            "TotalMarketCap": 94.34
+        },
+        {
+            "代码": "300902",
+            "名称": "国安达",
+            "Price": 25.99,
+            "Percent": 10.36,
+            "Amount": 4.57,
+            "PE_TTM": 439.07,
+            "PB": 5.75,
+            "TotalMarketCap": 47.25
         }
     ],
     "top_down_20": [
@@ -219,7 +219,7 @@
             "名称": "福然德",
             "Price": 15.55,
             "Percent": -10.01,
-            "Amount": 3.92,
+            "Amount": 3.97,
             "PE_TTM": 21.09,
             "PB": 1.81,
             "TotalMarketCap": 76.63
@@ -229,180 +229,180 @@
             "名称": "煌上煌",
             "Price": 14.35,
             "Percent": -9.97,
-            "Amount": 4.16,
+            "Amount": 4.17,
             "PE_TTM": 52.19,
             "PB": 2.89,
             "TotalMarketCap": 80.28
         },
         {
-            "代码": "300683",
-            "名称": "海特生物",
-            "Price": 50.03,
-            "Percent": -9.48,
-            "Amount": 7.2,
-            "PE_TTM": -117.52,
-            "PB": 2.75,
-            "TotalMarketCap": 65.49
+            "代码": "605598",
+            "名称": "上海港湾",
+            "Price": 29.2,
+            "Percent": -9.46,
+            "Amount": 9.52,
+            "PE_TTM": 50.02,
+            "PB": 3.97,
+            "TotalMarketCap": 71.42
         },
         {
             "代码": "002908",
             "名称": "德生科技",
-            "Price": 12.04,
-            "Percent": -9.41,
-            "Amount": 10.34,
-            "PE_TTM": 199.44,
-            "PB": 4.7,
-            "TotalMarketCap": 51.94
+            "Price": 12.09,
+            "Percent": -9.03,
+            "Amount": 10.5,
+            "PE_TTM": 200.27,
+            "PB": 4.72,
+            "TotalMarketCap": 52.16
+        },
+        {
+            "代码": "300683",
+            "名称": "海特生物",
+            "Price": 50.49,
+            "Percent": -8.65,
+            "Amount": 7.34,
+            "PE_TTM": -118.61,
+            "PB": 2.78,
+            "TotalMarketCap": 66.09
         },
         {
             "代码": "603063",
             "名称": "禾望电气",
-            "Price": 36.95,
-            "Percent": -8.31,
-            "Amount": 34.96,
-            "PE_TTM": 34.61,
+            "Price": 36.98,
+            "Percent": -8.24,
+            "Amount": 35.14,
+            "PE_TTM": 34.63,
             "PB": 3.51,
-            "TotalMarketCap": 167.96
-        },
-        {
-            "代码": "605598",
-            "名称": "上海港湾",
-            "Price": 29.6,
-            "Percent": -8.22,
-            "Amount": 9.47,
-            "PE_TTM": 50.7,
-            "PB": 4.02,
-            "TotalMarketCap": 72.4
+            "TotalMarketCap": 168.1
         },
         {
             "代码": "000788",
             "名称": "北大医药",
-            "Price": 6.39,
-            "Percent": -7.79,
-            "Amount": 4.0,
-            "PE_TTM": 20.86,
+            "Price": 6.4,
+            "Percent": -7.65,
+            "Amount": 4.02,
+            "PE_TTM": 20.89,
             "PB": 2.47,
-            "TotalMarketCap": 38.08
-        },
-        {
-            "代码": "002940",
-            "名称": "昂利康",
-            "Price": 53.13,
-            "Percent": -7.62,
-            "Amount": 7.63,
-            "PE_TTM": 168.45,
-            "PB": 7.04,
-            "TotalMarketCap": 107.18
-        },
-        {
-            "代码": "601718",
-            "名称": "际华集团",
-            "Price": 4.39,
-            "Percent": -7.58,
-            "Amount": 36.56,
-            "PE_TTM": 651.67,
-            "PB": 1.53,
-            "TotalMarketCap": 192.79
-        },
-        {
-            "代码": "300906",
-            "名称": "日月明",
-            "Price": 34.18,
-            "Percent": -7.55,
-            "Amount": 3.4,
-            "PE_TTM": 50.33,
-            "PB": 3.12,
-            "TotalMarketCap": 27.34
+            "TotalMarketCap": 38.14
         },
         {
             "代码": "688189",
             "名称": "南新制药",
-            "Price": 13.73,
-            "Percent": -7.54,
-            "Amount": 3.11,
-            "PE_TTM": -117.32,
+            "Price": 13.75,
+            "Percent": -7.41,
+            "Amount": 3.19,
+            "PE_TTM": -117.49,
             "PB": 4.06,
-            "TotalMarketCap": 37.68
+            "TotalMarketCap": 37.73
+        },
+        {
+            "代码": "601718",
+            "名称": "际华集团",
+            "Price": 4.4,
+            "Percent": -7.37,
+            "Amount": 36.72,
+            "PE_TTM": 653.16,
+            "PB": 1.53,
+            "TotalMarketCap": 193.23
+        },
+        {
+            "代码": "002940",
+            "名称": "昂利康",
+            "Price": 53.33,
+            "Percent": -7.27,
+            "Amount": 7.7,
+            "PE_TTM": 169.09,
+            "PB": 7.06,
+            "TotalMarketCap": 107.58
+        },
+        {
+            "代码": "300906",
+            "名称": "日月明",
+            "Price": 34.34,
+            "Percent": -7.11,
+            "Amount": 3.45,
+            "PE_TTM": 50.56,
+            "PB": 3.13,
+            "TotalMarketCap": 27.47
         },
         {
             "代码": "600605",
             "名称": "汇通能源",
-            "Price": 37.85,
-            "Percent": -7.18,
-            "Amount": 5.78,
-            "PE_TTM": 203.36,
-            "PB": 5.61,
-            "TotalMarketCap": 78.08
+            "Price": 37.91,
+            "Percent": -7.04,
+            "Amount": 5.83,
+            "PE_TTM": 203.69,
+            "PB": 5.62,
+            "TotalMarketCap": 78.2
         },
         {
             "代码": "603991",
             "名称": "至正股份",
             "Price": 63.72,
             "Percent": -6.87,
-            "Amount": 4.16,
+            "Amount": 4.2,
             "PE_TTM": -83.43,
             "PB": 22.25,
             "TotalMarketCap": 47.49
         },
         {
-            "代码": "300717",
-            "名称": "华信新材",
-            "Price": 23.97,
-            "Percent": -6.7,
-            "Amount": 3.61,
-            "PE_TTM": 38.76,
-            "PB": 3.52,
-            "TotalMarketCap": 24.64
+            "代码": "920027",
+            "名称": "交大铁发",
+            "Price": 32.54,
+            "Percent": -6.79,
+            "Amount": 2.91,
+            "PE_TTM": -2004.65,
+            "PB": 6.47,
+            "TotalMarketCap": 25.77
         },
         {
             "代码": "000010",
             "名称": "美丽生态",
             "Price": 4.76,
             "Percent": -6.67,
-            "Amount": 8.03,
+            "Amount": 8.13,
             "PE_TTM": -236.07,
             "PB": 18.49,
             "TotalMarketCap": 54.72
         },
         {
-            "代码": "920027",
-            "名称": "交大铁发",
-            "Price": 32.6,
-            "Percent": -6.62,
-            "Amount": 2.9,
-            "PE_TTM": -2008.35,
-            "PB": 6.48,
-            "TotalMarketCap": 25.82
-        },
-        {
-            "代码": "300875",
-            "名称": "捷强装备",
-            "Price": 60.7,
-            "Percent": -6.41,
-            "Amount": 10.52,
-            "PE_TTM": -292.47,
-            "PB": 6.31,
-            "TotalMarketCap": 60.6
+            "代码": "300717",
+            "名称": "华信新材",
+            "Price": 24.0,
+            "Percent": -6.58,
+            "Amount": 3.66,
+            "PE_TTM": 38.81,
+            "PB": 3.52,
+            "TotalMarketCap": 24.67
         },
         {
             "代码": "603406",
             "名称": "C天富龙",
-            "Price": 49.85,
-            "Percent": -6.31,
-            "Amount": 7.65,
-            "PE_TTM": 44.11,
-            "PB": 4.37,
-            "TotalMarketCap": 199.4
+            "Price": 49.75,
+            "Percent": -6.5,
+            "Amount": 7.73,
+            "PE_TTM": 44.02,
+            "PB": 4.36,
+            "TotalMarketCap": 199.0
         },
         {
-            "代码": "300515",
-            "名称": "三德科技",
-            "Price": 24.72,
-            "Percent": -6.19,
-            "Amount": 2.73,
-            "PE_TTM": 45.3,
-            "PB": 6.56,
-            "TotalMarketCap": 50.86
+            "代码": "300069",
+            "名称": "金利华电",
+            "Price": 22.33,
+            "Percent": -6.49,
+            "Amount": 8.29,
+            "PE_TTM": -833.21,
+            "PB": 9.52,
+            "TotalMarketCap": 26.13
+        },
+        {
+            "代码": "300732",
+            "名称": "设研院",
+            "Price": 11.43,
+            "Percent": -6.46,
+            "Amount": 5.35,
+            "PE_TTM": -89.23,
+            "PB": 1.46,
+            "TotalMarketCap": 37.07
         }
     ]
 }
