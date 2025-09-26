@@ -1,5 +1,41 @@
 [
     {
+        "代码": "000089",
+        "名称": "深圳机场",
+        "Price": 6.95,
+        "Percent": -0.29,
+        "Amount": 0.4,
+        "PE_TTM": 22.82,
+        "PB": 1.25,
+        "TotalMarketCap": 142.53,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "000333",
+        "名称": "美的集团",
+        "Price": 74.02,
+        "Percent": 1.62,
+        "Amount": 20.93,
+        "PE_TTM": 10.93,
+        "PB": 2.63,
+        "TotalMarketCap": 5686.74,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "000831",
+        "名称": "中国稀土",
+        "Price": 50.36,
+        "Percent": -0.57,
+        "Amount": 12.56,
+        "PE_TTM": 165.25,
+        "PB": 11.13,
+        "TotalMarketCap": 534.43,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
         "代码": "510300",
         "名称": "沪深300ETF",
         "Price": 4.674,
@@ -8,7 +44,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
@@ -20,7 +56,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
@@ -32,7 +68,67 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "600085",
+        "名称": "同仁堂",
+        "Price": 34.22,
+        "Percent": 0.2,
+        "Amount": 1.4,
+        "PE_TTM": 24.82,
+        "PB": 3.49,
+        "TotalMarketCap": 469.32,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "601899",
+        "名称": "紫金矿业",
+        "Price": 27.49,
+        "Percent": 0.81,
+        "Amount": 56.6,
+        "PE_TTM": 15.68,
+        "PB": 5.2,
+        "TotalMarketCap": 7306.18,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "000725",
+        "名称": "京东方Ａ",
+        "Price": 4.12,
+        "Percent": -1.2,
+        "Amount": 16.08,
+        "PE_TTM": 23.74,
+        "PB": 1.16,
+        "TotalMarketCap": 1541.45,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "001380",
+        "名称": "华纬科技",
+        "Price": 28.08,
+        "Percent": -2.33,
+        "Amount": 1.23,
+        "PE_TTM": 29.95,
+        "PB": 4.29,
+        "TotalMarketCap": 76.06,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "002074",
+        "名称": "国轩高科",
+        "Price": 45.3,
+        "Percent": -2.03,
+        "Amount": 27.74,
+        "PE_TTM": 112.02,
+        "PB": 3.12,
+        "TotalMarketCap": 821.4,
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
@@ -44,7 +140,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
@@ -56,7 +152,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
@@ -68,19 +164,55 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "601598",
+        "名称": "中国外运",
+        "Price": 7.05,
+        "Percent": -9.62,
+        "Amount": 4.35,
+        "PE_TTM": 13.17,
+        "PB": 1.28,
+        "TotalMarketCap": 512.69,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "601878",
+        "名称": "浙商证券",
+        "Price": 11.31,
+        "Percent": 0.0,
+        "Amount": 1.68,
+        "PE_TTM": 22.51,
+        "PB": 1.44,
+        "TotalMarketCap": 517.3,
+        "update_time_bjt": "2025-09-26 11:55:26",
+        "trade_date": "2025-09-26"
+    },
+    {
+        "代码": "603119",
+        "名称": "浙江荣泰",
+        "Price": 107.89,
+        "Percent": -1.47,
+        "Amount": 8.38,
+        "PE_TTM": 159.0,
+        "PB": 20.86,
+        "TotalMarketCap": 392.44,
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
         "代码": "01810",
         "名称": "小米集团-W",
-        "Price": 56.2,
-        "Percent": -5.47,
-        "Amount": 109.1,
+        "Price": 56.05,
+        "Percent": -5.72,
+        "Amount": 118.26,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     },
     {
@@ -92,7 +224,7 @@
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-09-26 11:36:29",
+        "update_time_bjt": "2025-09-26 11:55:26",
         "trade_date": "2025-09-26"
     }
 ]
