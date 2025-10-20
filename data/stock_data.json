@@ -1,17 +1,7 @@
 {
-    "update_time_bjt": "2025-10-20 11:31:27",
+    "update_time_bjt": "2025-10-20 11:41:27",
     "trade_date": "2025-10-20",
     "top_up_20": [
-        {
-            "代码": "300270",
-            "名称": "中威电子",
-            "Price": 12.42,
-            "Percent": 20.0,
-            "Amount": 4.7,
-            "PE_TTM": -48.11,
-            "PB": 6.62,
-            "TotalMarketCap": 37.61
-        },
         {
             "代码": "300626",
             "名称": "华瑞股份",
@@ -21,6 +11,16 @@
             "PE_TTM": 242.29,
             "PB": 4.38,
             "TotalMarketCap": 22.79
+        },
+        {
+            "代码": "300270",
+            "名称": "中威电子",
+            "Price": 12.42,
+            "Percent": 20.0,
+            "Amount": 4.7,
+            "PE_TTM": -48.11,
+            "PB": 6.62,
+            "TotalMarketCap": 37.61
         },
         {
             "代码": "301292",
@@ -65,22 +65,22 @@
         {
             "代码": "920896",
             "名称": "旺成科技",
-            "Price": 23.37,
-            "Percent": 15.69,
+            "Price": 23.39,
+            "Percent": 15.79,
             "Amount": 1.33,
-            "PE_TTM": 41.31,
+            "PE_TTM": 41.35,
             "PB": 5.74,
-            "TotalMarketCap": 23.66
+            "TotalMarketCap": 23.68
         },
         {
             "代码": "688498",
             "名称": "源杰科技",
-            "Price": 415.0,
-            "Percent": 14.77,
-            "Amount": 23.44,
-            "PE_TTM": 385.49,
-            "PB": 16.76,
-            "TotalMarketCap": 356.68
+            "Price": 415.25,
+            "Percent": 14.84,
+            "Amount": 23.52,
+            "PE_TTM": 385.72,
+            "PB": 16.77,
+            "TotalMarketCap": 356.9
         },
         {
             "代码": "301617",
@@ -95,12 +95,12 @@
         {
             "代码": "688772",
             "名称": "珠海冠宇",
-            "Price": 25.53,
-            "Percent": 13.92,
+            "Price": 25.52,
+            "Percent": 13.88,
             "Amount": 18.53,
-            "PE_TTM": 123.7,
+            "PE_TTM": 123.65,
             "PB": 4.24,
-            "TotalMarketCap": 289.02
+            "TotalMarketCap": 288.9
         },
         {
             "代码": "301360",
@@ -133,24 +133,24 @@
             "TotalMarketCap": 55.25
         },
         {
-            "代码": "688345",
-            "名称": "博力威",
-            "Price": 38.66,
-            "Percent": 11.57,
-            "Amount": 1.04,
-            "PE_TTM": 54.29,
-            "PB": 3.62,
-            "TotalMarketCap": 39.1
-        },
-        {
             "代码": "688048",
             "名称": "长光华芯",
-            "Price": 71.05,
-            "Percent": 11.54,
+            "Price": 71.1,
+            "Percent": 11.62,
             "Amount": 6.77,
-            "PE_TTM": 697.79,
-            "PB": 4.18,
-            "TotalMarketCap": 125.25
+            "PE_TTM": 698.28,
+            "PB": 4.19,
+            "TotalMarketCap": 125.34
+        },
+        {
+            "代码": "688345",
+            "名称": "博力威",
+            "Price": 38.67,
+            "Percent": 11.6,
+            "Amount": 1.04,
+            "PE_TTM": 54.3,
+            "PB": 3.62,
+            "TotalMarketCap": 39.11
         },
         {
             "代码": "688500",
@@ -183,24 +183,24 @@
             "TotalMarketCap": 37.08
         },
         {
-            "代码": "688353",
-            "名称": "华盛锂电",
-            "Price": 47.95,
-            "Percent": 10.79,
-            "Amount": 5.69,
-            "PE_TTM": -52.57,
-            "PB": 2.3,
-            "TotalMarketCap": 76.48
-        },
-        {
             "代码": "920651",
             "名称": "天罡股份",
-            "Price": 45.45,
-            "Percent": 10.58,
+            "Price": 45.54,
+            "Percent": 10.8,
             "Amount": 1.34,
-            "PE_TTM": 45.4,
-            "PB": 5.65,
-            "TotalMarketCap": 27.72
+            "PE_TTM": 45.49,
+            "PB": 5.66,
+            "TotalMarketCap": 27.78
+        },
+        {
+            "代码": "688353",
+            "名称": "华盛锂电",
+            "Price": 47.93,
+            "Percent": 10.74,
+            "Amount": 5.69,
+            "PE_TTM": -52.55,
+            "PB": 2.3,
+            "TotalMarketCap": 76.45
         }
     ],
     "top_down_20": [
@@ -255,16 +255,6 @@
             "TotalMarketCap": 115.95
         },
         {
-            "代码": "601212",
-            "名称": "白银有色",
-            "Price": 5.88,
-            "Percent": -9.95,
-            "Amount": 21.66,
-            "PE_TTM": -100.27,
-            "PB": 2.82,
-            "TotalMarketCap": 435.4
-        },
-        {
             "代码": "002716",
             "名称": "湖南白银",
             "Price": 7.24,
@@ -273,6 +263,16 @@
             "PE_TTM": 164.31,
             "PB": 6.08,
             "TotalMarketCap": 204.39
+        },
+        {
+            "代码": "601212",
+            "名称": "白银有色",
+            "Price": 5.88,
+            "Percent": -9.95,
+            "Amount": 21.66,
+            "PE_TTM": -100.27,
+            "PB": 2.82,
+            "TotalMarketCap": 435.4
         },
         {
             "代码": "002552",
