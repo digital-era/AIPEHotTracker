@@ -1,14 +1,86 @@
 [
     {
-        "代码": "01810",
-        "名称": "小米集团-W",
-        "Price": 46.08,
-        "Percent": -1.41,
-        "Amount": 44.1,
+        "代码": "510300",
+        "名称": "沪深300ETF",
+        "Price": 4.763,
+        "Percent": 1.06,
+        "Amount": 36.51,
         "PE_TTM": null,
         "PB": null,
         "TotalMarketCap": null,
-        "update_time_bjt": "2025-10-24 14:28:49",
+        "update_time_bjt": "2025-10-24 14:34:36",
+        "trade_date": "2025-10-24"
+    },
+    {
+        "代码": "513400",
+        "名称": "道琼斯ETF",
+        "Price": 1.208,
+        "Percent": 0.67,
+        "Amount": 1.31,
+        "PE_TTM": null,
+        "PB": null,
+        "TotalMarketCap": null,
+        "update_time_bjt": "2025-10-24 14:34:36",
+        "trade_date": "2025-10-24"
+    },
+    {
+        "代码": "518880",
+        "名称": "黄金ETF",
+        "Price": 8.944,
+        "Percent": -0.56,
+        "Amount": 58.23,
+        "PE_TTM": null,
+        "PB": null,
+        "TotalMarketCap": null,
+        "update_time_bjt": "2025-10-24 14:34:36",
+        "trade_date": "2025-10-24"
+    },
+    {
+        "代码": "159781",
+        "名称": "科创创业ETF",
+        "Price": 0.927,
+        "Percent": 4.98,
+        "Amount": 3.73,
+        "PE_TTM": null,
+        "PB": null,
+        "TotalMarketCap": null,
+        "update_time_bjt": "2025-10-24 14:34:36",
+        "trade_date": "2025-10-24"
+    },
+    {
+        "代码": "513100",
+        "名称": "纳指ETF",
+        "Price": 1.904,
+        "Percent": 1.12,
+        "Amount": 4.92,
+        "PE_TTM": null,
+        "PB": null,
+        "TotalMarketCap": null,
+        "update_time_bjt": "2025-10-24 14:34:36",
+        "trade_date": "2025-10-24"
+    },
+    {
+        "代码": "513290",
+        "名称": "纳指生物科技ETF",
+        "Price": 1.357,
+        "Percent": 0.07,
+        "Amount": 0.56,
+        "PE_TTM": null,
+        "PB": null,
+        "TotalMarketCap": null,
+        "update_time_bjt": "2025-10-24 14:34:36",
+        "trade_date": "2025-10-24"
+    },
+    {
+        "代码": "510050",
+        "名称": "上证50ETF",
+        "Price": 3.188,
+        "Percent": 0.66,
+        "Amount": 18.82,
+        "PE_TTM": null,
+        "PB": null,
+        "TotalMarketCap": null,
+        "update_time_bjt": "2025-10-24 14:34:36",
         "trade_date": "2025-10-24"
     }
 ]
